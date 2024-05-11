@@ -1,0 +1,17 @@
+.header {
+  background: #c0c0c050;
+}
+
+.optionWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  & > p {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px 10px;
+  }
+}
