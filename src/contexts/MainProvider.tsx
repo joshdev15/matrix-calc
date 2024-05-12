@@ -1,24 +1,34 @@
-import { FC, ReactNode, createContext } from "react";
+import {
+  Dispatch,
+  FC,
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useState,
+} from "react";
 
-interface MainContextProps {
-  hola: string;
+export interface MainContextProps {
+  section: string;
+  setSection: Dispatch<SetStateAction<string>>;
 }
 
-interface MainProviderProps {
+export interface MainProviderProps {
   children: ReactNode;
 }
 
 export const MainContext = createContext<MainContextProps>({
-  hola: "Hola",
+  section: "add",
+  setSection: () => {},
 });
 
 const MainProvider: FC<MainProviderProps> = ({ children }) => {
-  const saludos = "Hey";
+  const [section, setSectionAction] = useState("add");
 
   return (
     <MainContext.Provider
       value={{
-        hola: saludos,
+        section,
+        setSection: setSectionAction,
       }}
     >
       {children}
