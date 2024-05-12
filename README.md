@@ -8,7 +8,7 @@ Calculo Matricial
 
 - Joshua Mora - 20.791.550
 - Yunaikel Abrey - 
-- Genesis Forsay - 
+- Genesis Forsay - 27.103.563
 
 ## Sección: 
 
