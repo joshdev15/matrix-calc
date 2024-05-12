@@ -7,6 +7,7 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
+      <p className={styles.title}>Calculo Matricial</p>
       <div className={styles.optionWrapper}>
         <p onClick={() => setSection("add")}>Suma</p>
         <p onClick={() => setSection("sub")}>Resta</p>

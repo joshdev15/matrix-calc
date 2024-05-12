@@ -2,15 +2,22 @@
   background: #c0c0c050;
 }
 
+.title {
+  font-size: 20px;
+  font-weight: bolder;
+  margin: 0px;
+  padding: 20px 0px 5px;
+}
+
 .optionWrapper {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   min-height: 50px;
   & > p {
     font-size: 15px;
-    font-weight: bold;
+    font-weight: 500;
     margin: 0px;
     padding: 0px 10px;
     cursor: pointer;
