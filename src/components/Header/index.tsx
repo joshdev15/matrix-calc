@@ -13,6 +13,7 @@ const Header = () => {
         <p onClick={() => setSection("esc")}>Escalar</p>
         <p>Producto</p>
         <p>Diferencial</p>
+        <p onClick={() => setSection("info")}>Info</p>
       </div>
     </header>
   );
