@@ -13,7 +13,7 @@ const Info = () => {
         <div>
           <h3>Integrantes:</h3>
           <p>Joshua Mora - 20.791.550</p>
-          <p>Yunaikel Abreu - </p>
+          <p>Yunaikel Abreu - 27.669.183</p>
           <p>Genesis Forsay - 27.103.563</p>
         </div>
 
