@@ -12,7 +12,7 @@ const Header = () => {
         <p onClick={() => setSection("add")}>Suma</p>
         <p onClick={() => setSection("sub")}>Resta</p>
         <p onClick={() => setSection("esc")}>Escalar</p>
-        <p>Producto</p>
+        <p onClick={() => setSection("product")}>Producto</p>
         <p>Diferencial</p>
         <p onClick={() => setSection("info")}>Info</p>
       </div>
