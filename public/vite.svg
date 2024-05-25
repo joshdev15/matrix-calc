@@ -10,7 +10,7 @@
    version="1.1"
    id="svg6"
    sodipodi:docname="vite.svg"
-   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,7 @@
      inkscape:deskcolor="#505050"
      showguides="true"
      inkscape:zoom="7.818543"
-     inkscape:cx="11.319244"
+     inkscape:cx="11.319245"
      inkscape:cy="20.464171"
      inkscape:window-width="1392"
      inkscape:window-height="1027"
@@ -103,28 +103,28 @@
     </linearGradient>
   </defs>
   <rect
-     style="fill:none;stroke:#284eff;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:none;stroke:#ff9c28;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect6"
      width="94.061554"
      height="94.468048"
      x="16.960165"
      y="17.015976" />
   <rect
-     style="fill:none;stroke:#c0c0c0;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:none;stroke:#284eff;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect13"
      width="94.061554"
      height="94.468048"
      x="144.97829"
      y="17.015976" />
   <rect
-     style="fill:none;stroke:#c0c0c0;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:none;stroke:#284eff;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect14"
      width="94.061554"
      height="94.468048"
      x="16.960165"
      y="145.51598" />
   <rect
-     style="fill:none;stroke:#c0c0c0;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:none;stroke:#284eff;stroke-width:12.0469;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect15"
      width="94.061554"
      height="94.468048"
