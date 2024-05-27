@@ -2,7 +2,7 @@ import { useState } from "react";
 import AppInput from "../../components/AppInput";
 import styles from "./styles.module.scss";
 
-const Sub = () => {
+const Det = () => {
   const [base, setBase] = useState(2);
   const [finalResult, setResult] = useState<never[][]>();
 
@@ -12,7 +12,7 @@ const Sub = () => {
     const inputs = document.querySelectorAll("input");
 
     // Limpieza del Arreglo A
-    const orderedArrayA = Array.from({ length: base }).map((_) => []);
+    const ordered = Array.from({ length: base }).map((_) => []);
     const arrayA = Array.from(inputs).filter((element) =>
       element.id.includes("a-"),
     );
@@ -20,35 +20,37 @@ const Sub = () => {
     arrayA.forEach((item) => {
       const id = item.id.split("-");
       const arrLevel = parseInt(id[1]);
-      orderedArrayA[arrLevel].push(parseInt(item.value) as never);
+      ordered[arrLevel].push(parseInt(item.value) as never);
     });
 
-    // Limpieza del Arreglo B
-    const orderedArrayB = Array.from({ length: base }).map((_) => []);
-    const arrayB = Array.from(inputs).filter((element) =>
-      element.id.includes("b-"),
-    );
+    if (base === 2) {
+      const firstDiagon = ordered[0][0] * ordered[1][1];
+      const secondDiagon = ordered[1][0] * ordered[0][1];
+      const result = firstDiagon - secondDiagon;
+      setResult([[result]] as never);
+    }
 
-    arrayB.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedArrayB[arrLevel].push(parseInt(item.value) as never);
-    });
+    if (base === 3) {
+      const firstDiagon = ordered[0][0] * ordered[1][1] * ordered[2][2];
+      const secondDiagon = ordered[1][0] * ordered[2][1] * ordered[0][2];
+      const thirdDiagon = ordered[2][0] * ordered[0][1] * ordered[1][2];
+      const totalNormal = firstDiagon + secondDiagon + thirdDiagon;
 
-    // Calculando resultado
-    const resultArray = Array.from({ length: base }).map((_) => []);
-    orderedArrayA.forEach((i: any, aidx: number) => {
-      i.forEach((num: any, bidx: number) => {
-        resultArray[aidx][bidx] = (num - orderedArrayB[aidx][bidx]) as never;
-      });
-    });
+      const reverseFirstDiagon = ordered[0][2] * ordered[1][1] * ordered[2][0];
+      const reverseSecondDiagon = ordered[1][2] * ordered[2][1] * ordered[0][0];
+      const reverseThirdDiagon = ordered[2][2] * ordered[0][1] * ordered[1][0];
+      const totalReverse =
+        reverseFirstDiagon + reverseSecondDiagon + reverseThirdDiagon;
 
-    setResult(resultArray);
+      const result = totalNormal - totalReverse;
+      setResult([[result]] as never);
+    }
   };
 
   return (
     <div className={styles.wrapper} id="wrapper">
-      <h1 style={{ marginBottom: 10 }}>Resta</h1>
+      <h1 style={{ marginBottom: 10 }}>Determinante</h1>
+      <strong style={{ marginBottom: 10 }}>Sarrus</strong>
       <div style={{ marginBottom: 10 }}>
         <button className={styles.mr} onClick={() => setBase(2)}>
           Base 2
@@ -57,7 +59,7 @@ const Sub = () => {
       </div>
 
       <div style={{ display: "flex" }}>
-        <table style={{ marginRight: 20 }}>
+        <table>
           <tbody>
             {Array.from({ length: base }).map((_: any, indexOne: number) => (
               <tr key={`ArrA${indexOne}`}>
@@ -72,28 +74,10 @@ const Sub = () => {
             ))}
           </tbody>
         </table>
-
-        <div className={styles.operator}>-</div>
-
-        <table style={{ marginLeft: 20 }}>
-          <tbody>
-            {Array.from({ length: base }).map((_: any, indexOne: number) => (
-              <tr key={`ArrB${indexOne}`}>
-                {Array.from({ length: base }).map(
-                  (_: any, indexTwo: number) => (
-                    <td key={`b-${indexOne}-${indexTwo}`}>
-                      <AppInput id={`b-${indexOne}-${indexTwo}`} />
-                    </td>
-                  ),
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
 
       <div className={styles.mt}>
-        <button onClick={getFormData}>Restar</button>
+        <button onClick={getFormData}>Determinar</button>
       </div>
 
       {finalResult !== undefined && (
@@ -118,4 +102,4 @@ const Sub = () => {
   );
 };
 
-export default Sub;
+export default Det;

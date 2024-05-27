@@ -131,7 +131,7 @@ const Product = () => {
         </table>
       </div>
 
-      {columnsA === rowsB && (
+      {columnsA !== 0 && rowsB !== 0 && columnsA === rowsB && (
         <div className={styles.mt}>
           <button onClick={getFormData}>Calcular</button>
         </div>

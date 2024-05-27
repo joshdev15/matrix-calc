@@ -53,9 +53,7 @@ const Add = () => {
         <button className={styles.mr} onClick={() => setBase(2)}>
           Base 2
         </button>
-        <button className={styles.mr} onClick={() => setBase(3)}>
-          Base 3
-        </button>
+        <button onClick={() => setBase(3)}>Base 3</button>
       </div>
 
       <div style={{ display: "flex" }}>
@@ -95,9 +93,7 @@ const Add = () => {
       </div>
 
       <div className={styles.mt}>
-        <button className={styles.mr} onClick={getFormData}>
-          Sumar
-        </button>
+        <button onClick={getFormData}>Sumar</button>
       </div>
 
       {finalResult !== undefined && (
