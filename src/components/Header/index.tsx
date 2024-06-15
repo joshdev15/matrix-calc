@@ -14,6 +14,8 @@ const Header = () => {
         <p onClick={() => setSection("esc")}>Escalar</p>
         <p onClick={() => setSection("product")}>Producto</p>
         <p onClick={() => setSection("det")}>Determinante</p>
+        <p onClick={() => setSection("cramer_square")}>Cramer 2x2</p>
+        <p onClick={() => setSection("cramer_cube")}>Cramer 3x3</p>
         <p onClick={() => setSection("info")}>Info</p>
       </div>
     </header>

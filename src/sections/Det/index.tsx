@@ -50,7 +50,6 @@ const Det = () => {
   return (
     <div className={styles.wrapper} id="wrapper">
       <h1 style={{ marginBottom: 10 }}>Determinante</h1>
-      <strong style={{ marginBottom: 10 }}>Sarrus</strong>
       <div style={{ marginBottom: 10 }}>
         <button className={styles.mr} onClick={() => setBase(2)}>
           Base 2

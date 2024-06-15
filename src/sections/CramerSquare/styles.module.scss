@@ -1,0 +1,51 @@
+.mb {
+  margin-bottom: 10px;
+}
+
+.ml {
+  margin-left: 10px;
+}
+
+.mr {
+  margin-right: 10px;
+}
+
+.mt {
+  margin-top: 20px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.squareInput {
+  background: transparent;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #c4c4c4;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.operator {
+  display: flex;
+  align-items: center;
+}
+
+.independent {
+  border-left: 2px solid #c4c4c4;
+  padding: 0 0 0 20px;
+}
+
+.lastSpace {
+  padding-right: 20px;
+}

@@ -6,18 +6,19 @@ import Esc from "../../sections/Esc";
 import Product from "../../sections/Product";
 import Det from "../../sections/Det";
 import Info from "../../sections/About";
+import CramerSquare from "../../sections/CramerSquare";
+import CramerCube from "../../sections/CramerCube";
 
 const Home = () => {
   const { section } = useContext<MainContextProps>(MainContext);
-
-  console.log(section);
-
   const Options: any = {
     add: <Add />,
     sub: <Sub />,
     esc: <Esc />,
     product: <Product />,
     det: <Det />,
+    cramer_square: <CramerSquare />,
+    cramer_cube: <CramerCube />,
     info: <Info />,
   };
 
