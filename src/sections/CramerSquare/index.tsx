@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AppInput from "../../components/AppInput";
 import styles from "./styles.module.scss";
-import { getDeterminant } from "../../constants/functions";
+import { cleanArrayByKey, getDeterminant } from "../../constants/functions";
 
 const CramerSquare = () => {
   const [base] = useState(2);
@@ -14,44 +14,33 @@ const CramerSquare = () => {
     const inputs = document.querySelectorAll("input");
 
     // Limpieza del Arreglo A
-    const orderedA = Array.from({ length: base }).map((_) => []);
-    const arrayA = Array.from(inputs).filter((el) => el.id.includes("a-"));
-    arrayA.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedA[arrLevel].push(parseInt(item.value) as never);
-    });
+    const orderedA = cleanArrayByKey("a-", base, inputs);
 
     // Limpieza del Arreglo B
-    const orderedB = Array.from({ length: base }).map((_) => []);
-    const arrayB = Array.from(inputs).filter((el) => el.id.includes("b-"));
-    arrayB.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedB[arrLevel].push(parseInt(item.value) as never);
-    });
+    const orderedB = cleanArrayByKey("b-", base, inputs);
 
+    // Copiando arreglos en la memoria para cada caso
     const copyForX = orderedA.map((el) => el.map((innerEl) => innerEl));
     const copyForY = orderedA.map((el) => el.map((innerEl) => innerEl));
 
+    // Obtenemos la determinante del sistema
     const systemDet = getDeterminant(Array.from([...orderedA]), base);
-    console.log("system", systemDet);
 
     const findXArray: any = Array.from(copyForX);
     for (let i = 0; i < findXArray.length; i++) {
       findXArray[i].splice(0, 1, orderedB[i][0]);
     }
 
+    // Obtenemos la determinante de "x"
     const xDet = getDeterminant(findXArray, base);
-    console.log("X", xDet);
 
     const findYArray: any = Array.from(copyForY);
     for (let i = 0; i < findYArray.length; i++) {
       findYArray[i].splice(1, 1, orderedB[i][0]);
     }
 
+    // Obtenemos la determinante de "y"
     const yDet = getDeterminant(findYArray, base);
-    console.log("Y", yDet);
 
     interface IResult {
       system: number;

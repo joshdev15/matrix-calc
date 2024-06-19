@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AppInput from "../../components/AppInput";
 import styles from "./styles.module.scss";
+import { cleanArrayByKey, getDeterminant } from "../../constants/functions";
 
 const Det = () => {
   const [base, setBase] = useState(2);
@@ -12,39 +13,13 @@ const Det = () => {
     const inputs = document.querySelectorAll("input");
 
     // Limpieza del Arreglo A
-    const ordered = Array.from({ length: base }).map((_) => []);
-    const arrayA = Array.from(inputs).filter((element) =>
-      element.id.includes("a-"),
-    );
+    const ordered = cleanArrayByKey("a-", base, inputs);
 
-    arrayA.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      ordered[arrLevel].push(parseInt(item.value) as never);
-    });
+    // Obtener el determinante
+    const systemDet = getDeterminant(ordered, base);
 
-    if (base === 2) {
-      const firstDiagon = ordered[0][0] * ordered[1][1];
-      const secondDiagon = ordered[1][0] * ordered[0][1];
-      const result = firstDiagon - secondDiagon;
-      setResult([[result]] as never);
-    }
-
-    if (base === 3) {
-      const firstDiagon = ordered[0][0] * ordered[1][1] * ordered[2][2];
-      const secondDiagon = ordered[1][0] * ordered[2][1] * ordered[0][2];
-      const thirdDiagon = ordered[2][0] * ordered[0][1] * ordered[1][2];
-      const totalNormal = firstDiagon + secondDiagon + thirdDiagon;
-
-      const reverseFirstDiagon = ordered[0][2] * ordered[1][1] * ordered[2][0];
-      const reverseSecondDiagon = ordered[1][2] * ordered[2][1] * ordered[0][0];
-      const reverseThirdDiagon = ordered[2][2] * ordered[0][1] * ordered[1][0];
-      const totalReverse =
-        reverseFirstDiagon + reverseSecondDiagon + reverseThirdDiagon;
-
-      const result = totalNormal - totalReverse;
-      setResult([[result]] as never);
-    }
+    // Mostrar resultados
+    setResult([[systemDet]] as never);
   };
 
   return (

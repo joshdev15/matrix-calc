@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AppInput from "../../components/AppInput";
 import styles from "./styles.module.scss";
-import { getDeterminant } from "../../constants/functions";
+import { cleanArrayByKey, getDeterminant } from "../../constants/functions";
 
 const CramerCube = () => {
   const [base] = useState(3);
@@ -14,27 +14,17 @@ const CramerCube = () => {
     const inputs = document.querySelectorAll("input");
 
     // Limpieza del Arreglo A
-    const orderedA = Array.from({ length: base }).map((_) => []);
-    const arrayA = Array.from(inputs).filter((el) => el.id.includes("a-"));
-    arrayA.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedA[arrLevel].push(parseInt(item.value) as never);
-    });
+    const orderedA = cleanArrayByKey("a-", base, inputs);
 
     // Limpieza del Arreglo B
-    const orderedB = Array.from({ length: base }).map((_) => []);
-    const arrayB = Array.from(inputs).filter((el) => el.id.includes("b-"));
-    arrayB.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedB[arrLevel].push(parseInt(item.value) as never);
-    });
+    const orderedB = cleanArrayByKey("b-", base, inputs);
 
+    // Creamos copias para el resultado
     const copyForX = orderedA.map((el) => el.map((innerEl) => innerEl));
     const copyForY = orderedA.map((el) => el.map((innerEl) => innerEl));
     const copyForZ = orderedA.map((el) => el.map((innerEl) => innerEl));
 
+    // Obtenemos la determinante del Sistema
     const systemDet = getDeterminant(Array.from([...orderedA]), base);
     console.log("system", systemDet);
 
@@ -43,26 +33,24 @@ const CramerCube = () => {
       findXArray[i].splice(0, 1, orderedB[i][0]);
     }
 
+    // Obtenemos la determinante de "x"
     const xDet = getDeterminant(findXArray, base);
-    console.log("X", xDet);
 
     const findYArray: any = Array.from(copyForY);
     for (let i = 0; i < findYArray.length; i++) {
       findYArray[i].splice(1, 1, orderedB[i][0]);
     }
 
+    // Obtenemos la determinante de "y"
     const yDet = getDeterminant(findYArray, base);
-    console.log("Y", yDet);
 
     const findZArray: any = Array.from(copyForZ);
     for (let i = 0; i < findYArray.length; i++) {
       findZArray[i].splice(2, 1, orderedB[i][0]);
     }
 
-    console.log(findZArray, orderedB);
-
+    // Obtenemos la determinante de "z"
     const zDet = getDeterminant(findZArray, base);
-    console.log("z", zDet);
 
     interface IResult {
       system: number;

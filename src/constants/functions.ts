@@ -1,3 +1,22 @@
+export const cleanArrayByKey = (
+  key: string,
+  base: number,
+  inputs: NodeListOf<HTMLInputElement>,
+) => {
+  const orderedArray = Array.from({ length: base }).map((_) => []);
+  const array = Array.from(inputs).filter((element) =>
+    element.id.includes(key),
+  );
+
+  array.forEach((item) => {
+    const id = item.id.split("-");
+    const arrLevel = parseInt(id[1]);
+    orderedArray[arrLevel].push(parseInt(item.value) as never);
+  });
+
+  return orderedArray;
+};
+
 export const getDeterminant = (ordered: number[][], base: number) => {
   if (base === 2) {
     const firstDiagon = ordered[0][0] * ordered[1][1];

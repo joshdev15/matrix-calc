@@ -1,33 +1,23 @@
 import { useState } from "react";
 import AppInput from "../../components/AppInput";
 import styles from "./styles.module.scss";
+import { cleanArrayByKey } from "../../constants/functions";
 
 const Esc = () => {
   const [base, setBase] = useState(2);
   const [finalResult, setResult] = useState<never[][]>();
 
   const getFormData = () => {
-    // Obtener elementos visuales
     setResult(undefined);
+    // Obtener elementos visuales
     const inputs = document.querySelectorAll("input");
 
-    const escalar = Array.from(inputs).find((element) =>
-      element.id.includes("escalar"),
-    );
-
+    // Obtener el valor escalar
+    const escalar = Array.from(inputs).find((el) => el.id.includes("escalar"));
     if (escalar === undefined) return;
 
     // Limpieza del Arreglo B
-    const orderedArrayB = Array.from({ length: base }).map((_) => []);
-    const arrayB = Array.from(inputs).filter((element) =>
-      element.id.includes("b-"),
-    );
-
-    arrayB.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedArrayB[arrLevel].push(parseInt(item.value) as never);
-    });
+    const orderedArrayB = cleanArrayByKey("b-", base, inputs);
 
     // Calculando resultado
     const resultArray = Array.from({ length: base }).map((_) => []);

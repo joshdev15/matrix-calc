@@ -2,6 +2,7 @@ import { useState } from "react";
 import AppInput from "../../components/AppInput";
 import styles from "./styles.module.scss";
 import AppInputWithValue from "../../components/AppInputWithValue";
+import { cleanArrayByKey } from "../../constants/functions";
 
 const Product = () => {
   const [rowsA, setRowsA] = useState(0);
@@ -18,28 +19,10 @@ const Product = () => {
     const inputs = document.querySelectorAll("input");
 
     // Limpieza del Arreglo A
-    const orderedArrayA = Array.from({ length: rowsA }).map((_) => []);
-    const arrayA = Array.from(inputs).filter((element) =>
-      element.id.includes("a-"),
-    );
-
-    arrayA.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedArrayA[arrLevel].push(parseInt(item.value) as never);
-    });
+    const orderedArrayA = cleanArrayByKey("a-", rowsA, inputs);
 
     // Limpieza del Arreglo B
-    const orderedArrayB = Array.from({ length: rowsB }).map((_) => []);
-    const arrayB = Array.from(inputs).filter((element) =>
-      element.id.includes("b-"),
-    );
-
-    arrayB.forEach((item) => {
-      const id = item.id.split("-");
-      const arrLevel = parseInt(id[1]);
-      orderedArrayB[arrLevel].push(parseInt(item.value) as never);
-    });
+    const orderedArrayB = cleanArrayByKey("b-", rowsB, inputs);
 
     // Definicion de la Matriz final
     const subResult: number[][][] = Array.from({ length: rowsA }).map((_) =>
@@ -50,7 +33,6 @@ const Product = () => {
     orderedArrayA.forEach((itemA, indexA) => {
       itemA.forEach((subItemA, subIndexA) => {
         orderedArrayB[subIndexA].forEach((itemB, indexB) => {
-          console.log(subItemA, itemB);
           subResult[indexA][indexB].push(subItemA * itemB);
         });
       });
