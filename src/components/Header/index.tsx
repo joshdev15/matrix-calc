@@ -14,14 +14,18 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <p className={styles.title}>CÁLCULO MATRICIAL</p>
+      <p className={styles.title} onClick={() => router("/")}>
+        CÁLCULO MATRICIAL
+      </p>
 
       <div
         className={styles.routeWrapper}
         style={route.pathname === "/" ? {} : { paddingBottom: 10 }}
       >
-        <p onClick={() => router("/")}>INICIO</p>
-        <p onClick={() => router("/info")}>INFO</p>
+        {route.pathname === "/" && <p onClick={() => router("/info")}>INFO</p>}
+        {route.pathname === "/info" && (
+          <p onClick={() => router("/")}>INICIO</p>
+        )}
       </div>
 
       {route.pathname === "/" && (
