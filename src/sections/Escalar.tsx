@@ -1,14 +1,15 @@
 import { useState } from "react";
-import AppInput from "../../components/AppInput";
-import styles from "./styles.module.scss";
-import { cleanArrayByKey } from "../../constants/functions";
+import AppInput from "../components/AppInput";
+import styles from "../styles/general.module.scss";
+import { cleanArrayByKey } from "../constants/functions";
 
-const Esc = () => {
+const Escalar = () => {
   const [base, setBase] = useState(2);
   const [finalResult, setResult] = useState<never[][]>();
 
   const getFormData = () => {
     setResult(undefined);
+
     // Obtener elementos visuales
     const inputs = document.querySelectorAll("input");
 
@@ -32,8 +33,8 @@ const Esc = () => {
 
   return (
     <div className={styles.wrapper} id="wrapper">
-      <h1 style={{ marginBottom: 10 }}>Escalar</h1>
-      <div style={{ marginBottom: 10 }}>
+      <h1 className={styles.mb}>Escalar</h1>
+      <div className={styles.mb}>
         <button className={styles.mr} onClick={() => setBase(2)}>
           Base 2
         </button>
@@ -42,14 +43,12 @@ const Esc = () => {
         </button>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ marginRight: 20 }}>
-          <AppInput id={`escalar`} />
-        </div>
+      <div className={styles.arrayContainer}>
+        <AppInput id={`escalar`} />
 
         <div className={styles.operator}>*</div>
 
-        <table style={{ marginLeft: 20 }}>
+        <table>
           <tbody>
             {Array.from({ length: base }).map((_: any, indexOne: number) => (
               <tr key={`ArrB${indexOne}`}>
@@ -73,7 +72,7 @@ const Esc = () => {
       </div>
 
       {finalResult !== undefined && (
-        <table style={{ marginTop: 20 }}>
+        <table className={styles.mt}>
           <tbody>
             {finalResult.map((level, index) => (
               <tr key={`arr${index}`}>
@@ -94,4 +93,4 @@ const Esc = () => {
   );
 };
 
-export default Esc;
+export default Escalar;

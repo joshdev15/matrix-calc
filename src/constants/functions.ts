@@ -1,3 +1,10 @@
+/** cleanArrayByKey function is used to clean the array by key
+ * @param key - string
+ * @param base - number
+ * @param inputs - NodeListOf<HTMLInputElement>
+ * @returns orderedArray - number[][]
+ *
+ */
 export const cleanArrayByKey = (
   key: string,
   base: number,
@@ -17,6 +24,12 @@ export const cleanArrayByKey = (
   return orderedArray;
 };
 
+/** getDeterminant function is used to get the determinant of the matrix
+ * @param ordered - number[][]
+ * @param base - number
+ * @returns result - number[][]
+ *
+ */
 export const getDeterminant = (ordered: number[][], base: number) => {
   if (base === 2) {
     const firstDiagon = ordered[0][0] * ordered[1][1];

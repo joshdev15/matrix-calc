@@ -3,7 +3,7 @@
 }
 
 .title {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bolder;
   margin: 0px;
   padding: 20px 0px 5px;
@@ -14,13 +14,30 @@
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  min-height: 50px;
   & > p {
     font-size: 15px;
     font-weight: 500;
     margin: 0px;
+    padding: 10px;
+    cursor: pointer;
+    user-select: contain;
+  }
+}
+
+.routeWrapper {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  & > p {
+    font-size: 10px;
+    font-weight: 600;
+    margin: 0px;
     padding: 0px 10px;
     cursor: pointer;
     user-select: contain;
+    background: #a0a0a050;
+    border-radius: 5px;
+    margin: 2px;
   }
 }

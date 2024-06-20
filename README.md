@@ -6,9 +6,9 @@ Calculo Matricial
 
 ## Integrantes: 
 
-- Joshua Mora - 20.791.550
-- Yunaikel Abreu - 27.669.183
 - Genesis Forsay - 27.103.563
+- Yunaikel Abreu - 27.669.183
+- Joshua Mora - 20.791.550
 
 ## Sección: 
 

@@ -1,15 +1,15 @@
 import { useState } from "react";
-import AppInput from "../../components/AppInput";
-import styles from "./styles.module.scss";
-import { cleanArrayByKey } from "../../constants/functions";
+import AppInput from "../components/AppInput";
+import styles from "../styles/general.module.scss";
+import { cleanArrayByKey } from "../constants/functions";
 
-const Add = () => {
+const Addition = () => {
   const [base, setBase] = useState(2);
   const [finalResult, setResult] = useState<never[][]>();
 
   const getFormData = () => {
     setResult(undefined);
-    
+
     // Obtener elementos visuales
     const inputs = document.querySelectorAll("input");
 
@@ -27,21 +27,22 @@ const Add = () => {
       });
     });
 
+    // Mostrar resultados
     setResult(resultArray);
   };
 
   return (
     <div className={styles.wrapper} id="wrapper">
-      <h1 style={{ marginBottom: 10 }}>Suma</h1>
-      <div style={{ marginBottom: 10 }}>
+      <h1 className={styles.mb}>Suma</h1>
+      <div className={styles.mb}>
         <button className={styles.mr} onClick={() => setBase(2)}>
           Base 2
         </button>
         <button onClick={() => setBase(3)}>Base 3</button>
       </div>
 
-      <div style={{ display: "flex" }}>
-        <table style={{ marginRight: 20 }}>
+      <div className={styles.arrayContainer}>
+        <table>
           <tbody>
             {Array.from({ length: base }).map((_: any, indexOne: number) => (
               <tr key={`ArrA${indexOne}`}>
@@ -59,7 +60,7 @@ const Add = () => {
 
         <div className={styles.operator}>+</div>
 
-        <table style={{ marginLeft: 20 }}>
+        <table>
           <tbody>
             {Array.from({ length: base }).map((_: any, indexOne: number) => (
               <tr key={`ArrB${indexOne}`}>
@@ -81,7 +82,7 @@ const Add = () => {
       </div>
 
       {finalResult !== undefined && (
-        <table style={{ marginTop: 20 }}>
+        <table className={styles.mt}>
           <tbody>
             {finalResult.map((level, index) => (
               <tr key={`arr${index}`}>
@@ -102,4 +103,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default Addition;

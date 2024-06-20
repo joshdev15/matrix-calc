@@ -1,16 +1,19 @@
 import { useState } from "react";
-import AppInput from "../../components/AppInput";
-import styles from "./styles.module.scss";
-import { cleanArrayByKey, getDeterminant } from "../../constants/functions";
+import AppInput from "../components/AppInput";
+import styles from "../styles/general.module.scss";
+import { cleanArrayByKey, getDeterminant } from "../constants/functions";
+import { IResult2x2 } from "../constants/interfaces";
 
-const CramerCube = () => {
-  const [base] = useState(3);
+/** CramerCube function is used to calculate two matrix 2x2 with a Cramer method  */
+const CramerSquare = () => {
+  const [base] = useState(2);
   const [finalResult, setResult] = useState<never[][]>();
-  const placeholderArray = ["x", "y", "z"];
+  const placeholderArray = ["x", "y"];
 
   const getFormData = () => {
-    // Obtener elementos visuales
     setResult(undefined);
+
+    // Obtener elementos visuales
     const inputs = document.querySelectorAll("input");
 
     // Limpieza del Arreglo A
@@ -19,14 +22,12 @@ const CramerCube = () => {
     // Limpieza del Arreglo B
     const orderedB = cleanArrayByKey("b-", base, inputs);
 
-    // Creamos copias para el resultado
+    // Copiando arreglos en la memoria para cada caso
     const copyForX = orderedA.map((el) => el.map((innerEl) => innerEl));
     const copyForY = orderedA.map((el) => el.map((innerEl) => innerEl));
-    const copyForZ = orderedA.map((el) => el.map((innerEl) => innerEl));
 
-    // Obtenemos la determinante del Sistema
+    // Obtenemos la determinante del sistema
     const systemDet = getDeterminant(Array.from([...orderedA]), base);
-    console.log("system", systemDet);
 
     const findXArray: any = Array.from(copyForX);
     for (let i = 0; i < findXArray.length; i++) {
@@ -44,38 +45,25 @@ const CramerCube = () => {
     // Obtenemos la determinante de "y"
     const yDet = getDeterminant(findYArray, base);
 
-    const findZArray: any = Array.from(copyForZ);
-    for (let i = 0; i < findYArray.length; i++) {
-      findZArray[i].splice(2, 1, orderedB[i][0]);
-    }
-
-    // Obtenemos la determinante de "z"
-    const zDet = getDeterminant(findZArray, base);
-
-    interface IResult {
-      system: number;
-      x: number;
-      y: number;
-      z: number;
-    }
-
-    const finalValues: IResult = {
+    // Definimos los valores finales basados en la interfaz inicial IResult
+    const finalValues: IResult2x2 = {
       system: systemDet[0][0],
       x: xDet[0][0],
       y: yDet[0][0],
-      z: zDet[0][0],
     };
+
+    // Mostramos los resultados
     setResult([
-      ["∆", "∆x", "∆y", "∆z"],
-      [finalValues.system, finalValues.x, finalValues.y, finalValues.z],
+      ["∆", "∆x", "∆y"],
+      [finalValues.system, finalValues.x, finalValues.y],
     ] as never);
   };
 
   return (
     <div className={styles.wrapper} id="wrapper">
-      <h1 style={{ marginBottom: 10 }}>Cramer 3x3</h1>
+      <h1 className={styles.mb}>Cramer 2x2</h1>
 
-      <div style={{ display: "flex" }}>
+      <div className={styles.arrayContainer}>
         <table>
           <tbody>
             {Array.from({ length: base }).map((_: any, indexOne: number) => (
@@ -122,7 +110,7 @@ const CramerCube = () => {
 
       {finalResult !== undefined && (
         <>
-          <table style={{ marginTop: 20 }}>
+          <table className={styles.mt}>
             <tbody>
               {finalResult.map((level, index) => (
                 <tr key={`arr${index}`}>
@@ -139,36 +127,21 @@ const CramerCube = () => {
             </tbody>
           </table>
 
-          <div
-            style={{ marginTop: 20, border: "1px solid #c4c4c4", width: 200 }}
-          >
-            <p>
-              <strong>{'Valor de "x"'}</strong>
-            </p>
-            <p>
-              <strong>{"x = ∆x / ∆"}</strong>
-            </p>
-            <p>{`x = ${finalResult[1][1]} / ${finalResult[1][0]} = ${finalResult[1][1] / finalResult[1][0]}`}</p>
-          </div>
+          <div className={styles.resultCont}>
+            {placeholderArray.map((el: string, index: number) => {
+              const realIndex = index + 1;
+              const currentDeterminant = finalResult[1][realIndex];
+              const systemDeterminant = finalResult[1][0];
+              const finalValue = currentDeterminant / systemDeterminant;
 
-          <div
-            style={{ marginTop: 20, border: "1px solid #c4c4c4", width: 200 }}
-          >
-            <strong>{'Valor de "y"'}</strong>
-            <p>
-              <strong>{"y = ∆y / ∆"}</strong>
-            </p>
-            <p>{`y = ${finalResult[1][2]} / ${finalResult[1][0]} = ${finalResult[1][2] / finalResult[1][0]}`}</p>
-          </div>
-
-          <div
-            style={{ marginTop: 20, border: "1px solid #c4c4c4", width: 200 }}
-          >
-            <strong>{'Valor de "z"'}</strong>
-            <p>
-              <strong>{"y = ∆z / ∆"}</strong>
-            </p>
-            <p>{`y = ${finalResult[1][3]} / ${finalResult[1][0]} = ${finalResult[1][3] / finalResult[1][0]}`}</p>
+              return (
+                <div className={styles.resultBigSquare}>
+                  <p>{`Valor de ${el}`}</p>
+                  <p>{`${el} = ∆${el} / ∆`}</p>
+                  <p>{`${el} = ${currentDeterminant} / ${systemDeterminant} = ${finalValue.toFixed(2)}`}</p>
+                </div>
+              );
+            })}
           </div>
         </>
       )}
@@ -176,4 +149,4 @@ const CramerCube = () => {
   );
 };
 
-export default CramerCube;
+export default CramerSquare;

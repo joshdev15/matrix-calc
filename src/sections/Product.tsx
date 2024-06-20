@@ -1,8 +1,8 @@
-import { useState } from "react";
-import AppInput from "../../components/AppInput";
-import styles from "./styles.module.scss";
-import AppInputWithValue from "../../components/AppInputWithValue";
-import { cleanArrayByKey } from "../../constants/functions";
+import { useEffect, useState } from "react";
+import AppInput from "../components/AppInput";
+import styles from "../styles/general.module.scss";
+import AppInputWithValue from "../components/AppInputWithValue";
+import { cleanArrayByKey } from "../constants/functions";
 
 const Product = () => {
   const [rowsA, setRowsA] = useState(0);
@@ -14,8 +14,9 @@ const Product = () => {
   const [finalResult, setResult] = useState<never[][]>();
 
   const getFormData = () => {
-    // Obtener elementos visuales
     setResult(undefined);
+
+    // Obtener elementos visuales
     const inputs = document.querySelectorAll("input");
 
     // Limpieza del Arreglo A
@@ -43,14 +44,21 @@ const Product = () => {
       levelOne.map((levelTwo) => levelTwo.reduce((acc, cur) => acc + cur)),
     );
 
+    // Mostrar resultados
     setResult(result as never);
   };
+
+  useEffect(() => {
+    const evalue = (el: any) => ["", 0].includes(el);
+    if (evalue(rowsA) || evalue(columnsA) || evalue(rowsB) || evalue(columnsB))
+      setResult(undefined);
+  }, [rowsA, columnsA, rowsB, columnsB]);
 
   return (
     <div className={styles.wrapper} id="wrapper">
       <h1 className={styles.mb}>Producto</h1>
       <div className={`${styles.mb} ${styles.panel}`}>
-        <div className={styles.mr}>
+        <div>
           <strong>Dimensiones de la matriz A</strong>
           <div>
             <AppInputWithValue id={`rowsA`} value={rowsA} setValue={setRowsA} />
@@ -64,7 +72,7 @@ const Product = () => {
 
         <div className={styles.separator} />
 
-        <div className={styles.ml}>
+        <div>
           <strong>Dimensiones de la matriz B</strong>
           <div>
             <AppInputWithValue id={`rowsB`} value={rowsB} setValue={setRowsB} />
@@ -77,8 +85,14 @@ const Product = () => {
         </div>
       </div>
 
-      <div className={styles.matrixCont}>
-        <table style={{ marginRight: 20 }}>
+      <div
+        className={
+          rowsA > 4 || columnsA > 4 || rowsB > 4 || columnsB > 4
+            ? styles.arrayContainerColumn
+            : styles.arrayContainer
+        }
+      >
+        <table>
           <tbody>
             {Array.from({ length: rowsA }).map((_: any, indexOne: number) => (
               <tr key={`ArrA${indexOne}`}>
@@ -96,7 +110,7 @@ const Product = () => {
 
         <div className={styles.operator}>*</div>
 
-        <table style={{ marginLeft: 20 }}>
+        <table>
           <tbody>
             {Array.from({ length: rowsB }).map((_: any, indexOne: number) => (
               <tr key={`ArrB${indexOne}`}>
@@ -120,14 +134,14 @@ const Product = () => {
       )}
 
       {finalResult !== undefined && (
-        <table style={{ marginTop: 20 }}>
+        <table className={styles.mt}>
           <tbody>
             {finalResult.map((level, index) => (
               <tr key={`arr${index}`}>
                 {level.map((value: any, indexValue: number) => (
                   <td
-                    className={styles.squareInput}
                     key={`result-${index}-${indexValue}`}
+                    className={styles.squareInput}
                   >
                     {value}
                   </td>
