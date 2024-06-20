@@ -138,7 +138,7 @@ const CramerSquare = () => {
                 <div className={styles.resultBigSquare}>
                   <p>{`Valor de ${el}`}</p>
                   <p>{`${el} = ∆${el} / ∆`}</p>
-                  <p>{`${el} = ${currentDeterminant} / ${systemDeterminant} = ${finalValue.toFixed(2)}`}</p>
+                  <p>{`${el} = ${currentDeterminant} / ${systemDeterminant} = ${finalValue}`}</p>
                 </div>
               );
             })}
