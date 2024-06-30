@@ -31,7 +31,6 @@ const CramerCube = () => {
 
     // Obtenemos la determinante del Sistema
     const systemDet = getDeterminant(Array.from([...orderedA]), base);
-    console.log("system", systemDet);
 
     const findXArray: any = Array.from(copyForX);
     for (let i = 0; i < findXArray.length; i++) {

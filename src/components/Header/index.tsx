@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import styles from "./styles.module.scss";
 import { MainContext, MainContextProps } from "../../contexts/MainProvider";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -7,10 +7,6 @@ const Header = () => {
   const { setSection } = useContext<MainContextProps>(MainContext);
   const router = useNavigate();
   const route = useLocation();
-
-  useEffect(() => {
-    console.log(route);
-  }, [route]);
 
   return (
     <header className={styles.header}>
@@ -37,6 +33,9 @@ const Header = () => {
           <p onClick={() => setSection("det")}>Determinante</p>
           <p onClick={() => setSection("cramer_square")}>Cramer 2x2</p>
           <p onClick={() => setSection("cramer_cube")}>Cramer 3x3</p>
+          <p onClick={() => setSection("gauss_jordan_cube")}>
+            Gauss Jordan 3x3
+          </p>
         </div>
       )}
     </header>

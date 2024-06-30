@@ -9,6 +9,7 @@ import CramerSquare from "../sections/CramerSquare";
 import CramerCube from "../sections/CramerCube";
 import styles from "../styles/general.module.scss";
 import Header from "../components/Header";
+import GaussJordanCube from "../sections/GaussJordanCube";
 
 const Home = () => {
   const { section } = useContext<MainContextProps>(MainContext);
@@ -20,6 +21,7 @@ const Home = () => {
     det: <Determinant />,
     cramer_square: <CramerSquare />,
     cramer_cube: <CramerCube />,
+    gauss_jordan_cube: <GaussJordanCube />,
   };
 
   return (
