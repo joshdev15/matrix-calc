@@ -34,8 +34,6 @@ const reverseSignAndMultiplyByBase = (values: number[], base: number) => {
 
 const addValuesOfArrays = (arrA: number[], arrB: number[]) => {
   const finalArray = arrA.map((_: any, index: number) => {
-    console.log(`isNaN ${isNaN(arrA[index] + arrB[index])}`);
-
     const finalA =
       Math.sign(arrA[index]) === 1
         ? Math.abs(arrA[index])
@@ -56,10 +54,7 @@ const addValuesOfArrays = (arrA: number[], arrB: number[]) => {
 };
 
 const subtractValuesOfArrays = (arrA: number[], arrB: number[]) => {
-  // console.log("\nsub", arrA, arrB);
   const finalArray = arrA.map((_: any, index: number) => {
-    console.log(`isNaN ${isNaN(arrA[index] + arrB[index])}`);
-
     const finalA =
       Math.sign(arrA[index]) === 1
         ? Math.abs(arrA[index])
@@ -92,7 +87,12 @@ const getHandler = (localBase: number) => {
 const getLocalBase = (a: number, b: number) => {
   console.log("test localbase", a, b);
   const result = a / b;
-  console.log("test localbase 2", result);
+  console.log(
+    "test localbase 2",
+    result,
+    Number.isFinite(result),
+    Number.isInteger(result),
+  );
   if (Number.isFinite(result) && !Number.isInteger(result)) {
     const solution = {
       positive: Math.sign(b) === -1 ? Math.abs(b * -1) : Math.abs(b),
@@ -106,7 +106,7 @@ const getLocalBase = (a: number, b: number) => {
   return result;
 };
 
-/** CramerCube function is used to calculate two matrix 2x2 with a Cramer method  */
+/** GaussJordanCube function is used to calculate two matrix 3x3 with a Gauss Jordan method  */
 const GaussJordanCube = () => {
   const [base] = useState(3);
   const [finalResult, setResult] = useState<never[][]>();
@@ -140,16 +140,22 @@ const GaussJordanCube = () => {
     let localBase: any = getLocalBase(secondRow[0], firstRow[0]);
     let localBaseIsObject = typeof localBase !== "number";
     let operation = localBaseIsObject
-      ? getHandler(localBase.positive)
+      ? getHandler(localBase.negative)
       : getHandler(localBase);
 
     copyOrderedA[1] = operation(
       multiplyByBase(secondRow, localBaseIsObject ? localBase.positive : 1),
-      reverseSignAndMultiplyByBase(firstRow, localBase),
+      reverseSignAndMultiplyByBase(
+        firstRow,
+        localBaseIsObject ? localBase.positive : localBase,
+      ),
     );
     copyOrderedB[1] = operation(
       copyOrderedB[1],
-      reverseSignAndMultiplyByBase(copyOrderedB[0], localBase),
+      reverseSignAndMultiplyByBase(
+        copyOrderedB[0],
+        localBaseIsObject ? localBase.positive : localBase,
+      ),
     );
 
     /** Primer elemento de la fila 3 a cero (0)
@@ -163,21 +169,21 @@ const GaussJordanCube = () => {
     localBase = getLocalBase(thirdRow[0], firstRow[0]);
     localBaseIsObject = typeof localBase !== "number";
     operation = localBaseIsObject
-      ? getHandler(localBase.positive)
+      ? getHandler(localBase.negative)
       : getHandler(localBase);
 
     copyOrderedA[2] = operation(
       multiplyByBase(thirdRow, localBaseIsObject ? localBase.positive : 1),
       reverseSignAndMultiplyByBase(
         firstRow,
-        localBaseIsObject ? localBase.positive : 1,
+        localBaseIsObject ? localBase.positive : localBase,
       ),
     );
     copyOrderedB[2] = operation(
       copyOrderedB[2],
       reverseSignAndMultiplyByBase(
         copyOrderedB[0],
-        localBaseIsObject ? localBase.positive : 1,
+        localBaseIsObject ? localBase.positive : localBase,
       ),
     );
 
@@ -192,14 +198,14 @@ const GaussJordanCube = () => {
     localBase = getLocalBase(thirdRow[1], secondRow[1]);
     localBaseIsObject = typeof localBase !== "number";
     operation = localBaseIsObject
-      ? getHandler(localBase.positive)
+      ? getHandler(localBase.negative)
       : getHandler(localBase);
 
     copyOrderedA[2] = operation(
       multiplyByBase(thirdRow, localBaseIsObject ? localBase.positive : 1),
       reverseSignAndMultiplyByBase(
         secondRow,
-        localBaseIsObject ? localBase.positive : 1,
+        localBaseIsObject ? localBase.positive : localBase,
       ),
     );
 
@@ -207,7 +213,7 @@ const GaussJordanCube = () => {
       copyOrderedB[2],
       reverseSignAndMultiplyByBase(
         copyOrderedB[1],
-        localBaseIsObject ? localBase.positive : 1,
+        localBaseIsObject ? localBase.positive : localBase,
       ),
     );
 
@@ -222,22 +228,15 @@ const GaussJordanCube = () => {
 
     localBase = getLocalBase(firstRow[2], thirdRow[2]);
     localBaseIsObject = typeof localBase !== "number";
-    console.log(
-      `%clocalbase ${JSON.stringify(localBase)} ${localBaseIsObject}`,
-      clogWarnStyle,
-    );
     operation = localBaseIsObject
       ? getHandler(localBase.negative)
       : getHandler(localBase);
 
-    console.log("reversed", reverseSignAndMultiplyByBase(firstRow, localBase));
-
-    console.log("multiply", multiplyByBase(firstRow, localBase));
     copyOrderedA[0] = operation(
       multiplyByBase(thirdRow, localBaseIsObject ? localBase.positive : 1),
       reverseSignAndMultiplyByBase(
         firstRow,
-        localBaseIsObject ? localBase.positive : 1,
+        localBaseIsObject ? localBase.positive : localBase,
       ),
     );
 
