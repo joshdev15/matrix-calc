@@ -4,8 +4,8 @@ import styles from "../styles/general.module.scss";
 import { cleanArrayByKey } from "../constants/functions";
 
 const clogStyle = "font-size: 20px; background: dodgerblue";
-const clogWarnStyle = "font-size: 20px; background: orange";
-const clogImportantStyle = "font-size: 20px; background: tomato";
+const clogWarnStyle = "font-size: 20px; background: orange; color: black";
+// const clogImportantStyle = "font-size: 20px; background: tomato";
 
 const multiplyByBase = (values: number[], base?: number) => {
   if (base === undefined) {
@@ -20,12 +20,7 @@ const multiplyByBase = (values: number[], base?: number) => {
 };
 
 const reverseSignAndMultiplyByBase = (values: number[], base: number) => {
-  console.log("reverse", values, base);
-
   return values.map((value) => {
-    console.log("--", value, base);
-    console.log("---", -Math.abs(value * base), Math.abs(value * base));
-
     return Math.sign(value) === 1
       ? -Math.abs(value * base)
       : Math.abs(value * base);
@@ -43,13 +38,10 @@ const addValuesOfArrays = (arrA: number[], arrB: number[]) => {
         ? Math.abs(arrB[index])
         : -Math.abs(arrB[index]);
 
-    console.log("final A/B", finalA, finalB);
-    console.log("final", finalA - finalB);
-
-    return arrA[index] + arrB[index];
+    return finalA + finalB;
   });
 
-  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogImportantStyle);
+  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogWarnStyle);
   return finalArray;
 };
 
@@ -64,21 +56,14 @@ const subtractValuesOfArrays = (arrA: number[], arrB: number[]) => {
         ? Math.abs(arrB[index])
         : -Math.abs(arrB[index]);
 
-    console.log("final A/B", finalA, finalB);
-    console.log("final", finalA - finalB);
     return finalA - finalB;
   });
 
-  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogImportantStyle);
+  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogWarnStyle);
   return finalArray;
 };
 
 const getHandler = (localBase: number) => {
-  console.log(
-    `%cgetHandler ${localBase} ${Math.sign(localBase) === -1 ? "negative" : "positive"}`,
-    clogWarnStyle,
-  );
-
   return Math.sign(localBase) === -1
     ? subtractValuesOfArrays
     : addValuesOfArrays;
@@ -140,21 +125,24 @@ const GaussJordanCube = () => {
     let localBase: any = getLocalBase(secondRow[0], firstRow[0]);
     let localBaseIsObject = typeof localBase !== "number";
     let operation = localBaseIsObject
-      ? getHandler(localBase.negative)
+      ? getHandler(localBase.positive)
       : getHandler(localBase);
 
     copyOrderedA[1] = operation(
       multiplyByBase(secondRow, localBaseIsObject ? localBase.positive : 1),
       reverseSignAndMultiplyByBase(
         firstRow,
-        localBaseIsObject ? localBase.positive : localBase,
+        localBaseIsObject ? localBase.negative : localBase,
       ),
     );
     copyOrderedB[1] = operation(
-      copyOrderedB[1],
+      multiplyByBase(
+        copyOrderedB[1],
+        localBaseIsObject ? localBase.positive : 1,
+      ),
       reverseSignAndMultiplyByBase(
         copyOrderedB[0],
-        localBaseIsObject ? localBase.positive : localBase,
+        localBaseIsObject ? localBase.negative : localBase,
       ),
     );
 
@@ -180,7 +168,10 @@ const GaussJordanCube = () => {
       ),
     );
     copyOrderedB[2] = operation(
-      copyOrderedB[2],
+      multiplyByBase(
+        copyOrderedB[2],
+        localBaseIsObject ? localBase.positive : 1,
+      ),
       reverseSignAndMultiplyByBase(
         copyOrderedB[0],
         localBaseIsObject ? localBase.positive : localBase,
@@ -229,11 +220,11 @@ const GaussJordanCube = () => {
     localBase = getLocalBase(firstRow[2], thirdRow[2]);
     localBaseIsObject = typeof localBase !== "number";
     operation = localBaseIsObject
-      ? getHandler(localBase.negative)
+      ? getHandler(localBase.positive)
       : getHandler(localBase);
 
     copyOrderedA[0] = operation(
-      multiplyByBase(thirdRow, localBaseIsObject ? localBase.positive : 1),
+      multiplyByBase(thirdRow, localBaseIsObject ? localBase.negative : 1),
       reverseSignAndMultiplyByBase(
         firstRow,
         localBaseIsObject ? localBase.positive : localBase,
@@ -243,7 +234,7 @@ const GaussJordanCube = () => {
     copyOrderedB[0] = operation(
       multiplyByBase(
         copyOrderedB[2],
-        localBaseIsObject ? localBase.positive : 1,
+        localBaseIsObject ? localBase.negative : 1,
       ),
       reverseSignAndMultiplyByBase(
         copyOrderedB[0],
