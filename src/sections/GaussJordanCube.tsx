@@ -229,7 +229,6 @@ const GaussJordanCube = () => {
     );
 
     /** Matriz de identidad a 1 */
-
     firstRow = copyOrderedA[0];
     secondRow = copyOrderedA[1];
     thirdRow = copyOrderedA[2];
@@ -242,17 +241,18 @@ const GaussJordanCube = () => {
     const indSecond = copyOrderedB[1] / secondRow[1];
     const indThird = copyOrderedB[2] / thirdRow[2];
 
+    console.log([
+      JSON.stringify(firstRowResult).replace(/\[|\]/g, ""),
+      JSON.stringify(secondRowResult).replace(/\[|\]/g, ""),
+      JSON.stringify(thirdRowResult).replace(/\[|\]/g, ""),
+    ]);
+    console.log([indFirst, indSecond, indThird]);
+
     firstRowResult.push(indFirst);
     secondRowResult.push(indSecond);
     thirdRowResult.push(indThird);
 
-    console.log("-------------");
-    console.log([firstRowResult, secondRowResult, thirdRowResult]);
-    console.log(copyOrderedB);
-
     setResult([firstRowResult, secondRowResult, thirdRowResult] as never[]);
-    console.log(copyOrderedA);
-    console.log(copyOrderedB);
   };
 
   return (
@@ -315,7 +315,7 @@ const GaussJordanCube = () => {
                       className={styles.squareInput}
                       key={`result-${index}-${indexValue}`}
                     >
-                      {value}
+                      {(value as number).toFixed(0)}
                     </td>
                   ))}
                 </tr>

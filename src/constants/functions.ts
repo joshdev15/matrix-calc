@@ -1,6 +1,8 @@
 export const clogStyle = "font-size: 20px; background: dodgerblue";
 export const clogWarnStyle =
   "font-size: 20px; background: orange; color: black";
+export const clogImportantStyle =
+  "font-size: 20px; background: tomato; color: black";
 
 /** cleanArrayByKey function is used to clean the array by key
  * @param key - string
@@ -97,7 +99,10 @@ const addValuesOfArrays = (arrA: number[], arrB: number[]) => {
     return finalA + finalB;
   });
 
-  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogWarnStyle);
+  console.log(
+    `%c${finalArray.length > 1 ? "finalArray" : "independent"} ${JSON.stringify(finalArray)}`,
+    finalArray.length > 1 ? clogWarnStyle : clogImportantStyle,
+  );
   return finalArray;
 };
 
@@ -119,7 +124,10 @@ const subtractValuesOfArrays = (arrA: number[], arrB: number[]) => {
     return finalA - finalB;
   });
 
-  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogWarnStyle);
+  console.log(
+    `%c${finalArray.length > 1 ? "finalArray" : "independent"} ${JSON.stringify(finalArray)}`,
+    finalArray.length > 1 ? clogWarnStyle : clogImportantStyle,
+  );
   return finalArray;
 };
 
@@ -137,7 +145,6 @@ export const getLocalBase = (a: number, b: number) => {
       negative: Math.sign(a) === -1 ? -Math.abs(a) : Math.abs(a),
     };
 
-    console.log(solution);
     return solution;
   }
 
