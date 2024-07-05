@@ -1,97 +1,14 @@
 import { useState } from "react";
 import AppInput from "../components/AppInput";
 import styles from "../styles/general.module.scss";
-import { cleanArrayByKey } from "../constants/functions";
-
-const clogStyle = "font-size: 20px; background: dodgerblue";
-const clogWarnStyle = "font-size: 20px; background: orange; color: black";
-
-const multiplyByBase = (values: number[], base?: number) => {
-  if (base === undefined) {
-    return values;
-  }
-
-  if (base !== 1) {
-    return values.map((value) => Math.abs(value * base));
-  }
-
-  return values;
-};
-
-const reverseSignAndMultiplyByBase = (values: number[], base: number) => {
-  return values.map((value) => {
-    return Math.sign(value) === 1
-      ? -Math.abs(value * base)
-      : Math.abs(value * base);
-  });
-};
-
-const addValuesOfArrays = (arrA: number[], arrB: number[]) => {
-  const finalArray = arrA.map((_: any, index: number) => {
-    const finalA =
-      Math.sign(arrA[index]) === 1
-        ? Math.abs(arrA[index])
-        : -Math.abs(arrA[index]);
-    const finalB =
-      Math.sign(arrB[index]) === 1
-        ? Math.abs(arrB[index])
-        : -Math.abs(arrB[index]);
-    return finalA + finalB;
-  });
-
-  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogWarnStyle);
-  return finalArray;
-};
-
-const subtractValuesOfArrays = (arrA: number[], arrB: number[]) => {
-  const finalArray = arrA.map((_: any, index: number) => {
-    const someNegative = [arrA[index], arrB[index]].some((value) => {
-      return Math.sign(value) === -1;
-    });
-
-    const finalA =
-      Math.sign(arrA[index]) === 1 && !someNegative
-        ? Math.abs(arrA[index])
-        : -Math.abs(arrA[index]);
-    const finalB =
-      Math.sign(arrB[index]) === 1 && !someNegative
-        ? Math.abs(arrB[index])
-        : -Math.abs(arrB[index]);
-
-    return finalA - finalB;
-  });
-
-  console.log(`%cfinalArray ${JSON.stringify(finalArray)}`, clogWarnStyle);
-  return finalArray;
-};
-
-const getHandler = (localBase: number) => {
-  return Math.sign(localBase) === -1
-    ? subtractValuesOfArrays
-    : addValuesOfArrays;
-};
-
-const getLocalBase = (a: number, b: number) => {
-  console.log("test localbase", a, b);
-  const result = a / b;
-  console.log(
-    "test localbase 2",
-    result,
-    Number.isFinite(result),
-    Number.isInteger(result),
-  );
-  if (Number.isFinite(result) && !Number.isInteger(result)) {
-    const solution = {
-      positive: Math.sign(b) === -1 ? Math.abs(b * -1) : Math.abs(b),
-      negative: Math.sign(a) === -1 ? -Math.abs(a) : Math.abs(a),
-    };
-
-    console.log(solution);
-    return solution;
-  }
-
-  return result;
-};
+import {
+  cleanArrayByKey,
+  multiplyByBase,
+  reverseSignAndMultiplyByBase,
+  getHandler,
+  getLocalBase,
+  clogStyle,
+} from "../constants/functions";
 
 /** GaussJordanCube function is used to calculate two matrix 3x3 with a Gauss Jordan method  */
 const GaussJordanCube = () => {
