@@ -5,7 +5,6 @@ import { cleanArrayByKey } from "../constants/functions";
 
 const clogStyle = "font-size: 20px; background: dodgerblue";
 const clogWarnStyle = "font-size: 20px; background: orange; color: black";
-// const clogImportantStyle = "font-size: 20px; background: tomato";
 
 const multiplyByBase = (values: number[], base?: number) => {
   if (base === undefined) {
@@ -37,7 +36,6 @@ const addValuesOfArrays = (arrA: number[], arrB: number[]) => {
       Math.sign(arrB[index]) === 1
         ? Math.abs(arrB[index])
         : -Math.abs(arrB[index]);
-
     return finalA + finalB;
   });
 
@@ -47,12 +45,16 @@ const addValuesOfArrays = (arrA: number[], arrB: number[]) => {
 
 const subtractValuesOfArrays = (arrA: number[], arrB: number[]) => {
   const finalArray = arrA.map((_: any, index: number) => {
+    const someNegative = [arrA[index], arrB[index]].some((value) => {
+      return Math.sign(value) === -1;
+    });
+
     const finalA =
-      Math.sign(arrA[index]) === 1
+      Math.sign(arrA[index]) === 1 && !someNegative
         ? Math.abs(arrA[index])
         : -Math.abs(arrA[index]);
     const finalB =
-      Math.sign(arrB[index]) === 1
+      Math.sign(arrB[index]) === 1 && !someNegative
         ? Math.abs(arrB[index])
         : -Math.abs(arrB[index]);
 
