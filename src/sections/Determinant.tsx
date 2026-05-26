@@ -1,29 +1,24 @@
 import { useState } from "react";
 import AppInput from "../components/AppInput";
 import styles from "../styles/general.module.scss";
-import { cleanArrayByKey, getDeterminant } from "../constants/functions";
+import { getDeterminant } from "../constants/functions";
+import { useMatrix } from "../hooks/useMatrix";
 
-/** Det component to calculate the determinant value of an array
- * with sarrus method
- */
 const Determinant = () => {
-  const [base, setBase] = useState(2);
-  const [finalResult, setResult] = useState<never[][]>();
+  const { base, setBase, values, updateValue, loadExample, getMatrix } = useMatrix(2);
+  const [finalResult, setResult] = useState<number[][]>();
 
   const getFormData = () => {
     setResult(undefined);
 
-    // Obtener elementos visuales
-    const inputs = document.querySelectorAll("input");
+    // Obtener la matriz del hook
+    const ordered = getMatrix("a", base, base);
 
-    // Limpieza del Arreglo A
-    const ordered = cleanArrayByKey("a-", base, inputs);
-
-    // Obtener el determinante
+    // Obtener el determinante (ya es una matriz 2D [[resultado]])
     const systemDet = getDeterminant(ordered, base);
 
     // Mostrar resultados
-    setResult([[systemDet]] as never);
+    setResult(systemDet as number[][]);
   };
 
   return (
@@ -33,7 +28,12 @@ const Determinant = () => {
         <button className={styles.mr} onClick={() => setBase(2)}>
           Base 2
         </button>
-        <button onClick={() => setBase(3)}>Base 3</button>
+        <button className={styles.mr} onClick={() => setBase(3)}>
+          Base 3
+        </button>
+        <button onClick={() => loadExample("det", base)}>
+          Cargar Ejemplo
+        </button>
       </div>
 
       <div className={styles.arrayContainer}>
@@ -44,7 +44,11 @@ const Determinant = () => {
                 {Array.from({ length: base }).map(
                   (_: any, indexTwo: number) => (
                     <td key={`a-${indexOne}-${indexTwo}`}>
-                      <AppInput id={`a-${indexOne}-${indexTwo}`} />
+                      <AppInput
+                        id={`a-${indexOne}-${indexTwo}`}
+                        value={values[`a-${indexOne}-${indexTwo}`]}
+                        onChange={(val) => updateValue(`a-${indexOne}-${indexTwo}`, val)}
+                      />
                     </td>
                   ),
                 )}
@@ -63,7 +67,7 @@ const Determinant = () => {
           <tbody>
             {finalResult.map((level, index) => (
               <tr key={`arr${index}`}>
-                {level.map((value: any, indexValue: number) => (
+                {level.map((value: number, indexValue: number) => (
                   <td
                     className={styles.squareInput}
                     key={`result-${index}-${indexValue}`}

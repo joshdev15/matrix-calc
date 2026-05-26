@@ -2,38 +2,35 @@ import { useEffect, useState } from "react";
 import AppInput from "../components/AppInput";
 import styles from "../styles/general.module.scss";
 import AppInputWithValue from "../components/AppInputWithValue";
-import { cleanArrayByKey } from "../constants/functions";
+import { useMatrix } from "../hooks/useMatrix";
 
 const Product = () => {
-  const [rowsA, setRowsA] = useState(0);
-  const [columnsA, setColumsA] = useState(0);
+  const [rowsA, setRowsA] = useState(2);
+  const [columnsA, setColumsA] = useState(2);
 
-  const [rowsB, setRowsB] = useState(0);
-  const [columnsB, setColumsB] = useState(0);
+  const [rowsB, setRowsB] = useState(2);
+  const [columnsB, setColumsB] = useState(2);
 
-  const [finalResult, setResult] = useState<never[][]>();
+  const { values, updateValue, loadExample, getMatrix } = useMatrix(2);
+  const [finalResult, setResult] = useState<number[][]>();
 
   const getFormData = () => {
     setResult(undefined);
 
-    // Obtener elementos visuales
-    const inputs = document.querySelectorAll("input");
-
-    // Limpieza del Arreglo A
-    const orderedArrayA = cleanArrayByKey("a-", rowsA, inputs);
-
-    // Limpieza del Arreglo B
-    const orderedArrayB = cleanArrayByKey("b-", rowsB, inputs);
+    // Obtener matrices del hook usando dimensiones dinámicas
+    const orderedArrayA = getMatrix("a", rowsA, columnsA);
+    const orderedArrayB = getMatrix("b", rowsB, columnsB);
 
     // Definicion de la Matriz final
-    const subResult: number[][][] = Array.from({ length: rowsA }).map((_) =>
-      Array.from({ length: columnsB }).map((_) => []),
+    const subResult: number[][][] = Array.from({ length: rowsA }).map(() =>
+      Array.from({ length: columnsB }).map(() => []),
     );
 
     // Calculo y ubicacion de los resultados
     orderedArrayA.forEach((itemA, indexA) => {
       itemA.forEach((subItemA, subIndexA) => {
-        orderedArrayB[subIndexA].forEach((itemB, indexB) => {
+        const rowB = orderedArrayB[subIndexA] || [];
+        rowB.forEach((itemB, indexB) => {
           subResult[indexA][indexB].push(subItemA * itemB);
         });
       });
@@ -41,11 +38,19 @@ const Product = () => {
 
     // Sumatoria
     const result = subResult.map((levelOne) =>
-      levelOne.map((levelTwo) => levelTwo.reduce((acc, cur) => acc + cur)),
+      levelOne.map((levelTwo) => levelTwo.reduce((acc, cur) => acc + cur, 0)),
     );
 
     // Mostrar resultados
-    setResult(result as never);
+    setResult(result);
+  };
+
+  const handleLoadExample = () => {
+    setRowsA(3);
+    setColumsA(2);
+    setRowsB(2);
+    setColumsB(3);
+    loadExample("product");
   };
 
   useEffect(() => {
@@ -57,6 +62,7 @@ const Product = () => {
   return (
     <div className={styles.wrapper} id="wrapper">
       <h1 className={styles.mb}>Producto</h1>
+      
       <div className={`${styles.mb} ${styles.panel}`}>
         <div>
           <strong>Dimensiones de la matriz A</strong>
@@ -85,6 +91,12 @@ const Product = () => {
         </div>
       </div>
 
+      <div className={styles.mb}>
+        <button onClick={handleLoadExample}>
+          Cargar Ejemplo
+        </button>
+      </div>
+
       <div
         className={
           rowsA > 4 || columnsA > 4 || rowsB > 4 || columnsB > 4
@@ -99,7 +111,11 @@ const Product = () => {
                 {Array.from({ length: columnsA }).map(
                   (_: any, indexTwo: number) => (
                     <td key={`a-${indexOne}-${indexTwo}`}>
-                      <AppInput id={`a-${indexOne}-${indexTwo}`} />
+                      <AppInput
+                        id={`a-${indexOne}-${indexTwo}`}
+                        value={values[`a-${indexOne}-${indexTwo}`]}
+                        onChange={(val) => updateValue(`a-${indexOne}-${indexTwo}`, val)}
+                      />
                     </td>
                   ),
                 )}
@@ -117,7 +133,11 @@ const Product = () => {
                 {Array.from({ length: columnsB }).map(
                   (_: any, indexTwo: number) => (
                     <td key={`b-${indexOne}-${indexTwo}`}>
-                      <AppInput id={`b-${indexOne}-${indexTwo}`} />
+                      <AppInput
+                        id={`b-${indexOne}-${indexTwo}`}
+                        value={values[`b-${indexOne}-${indexTwo}`]}
+                        onChange={(val) => updateValue(`b-${indexOne}-${indexTwo}`, val)}
+                      />
                     </td>
                   ),
                 )}
@@ -138,7 +158,7 @@ const Product = () => {
           <tbody>
             {finalResult.map((level, index) => (
               <tr key={`arr${index}`}>
-                {level.map((value: any, indexValue: number) => (
+                {level.map((value: number, indexValue: number) => (
                   <td
                     key={`result-${index}-${indexValue}`}
                     className={styles.squareInput}

@@ -1,29 +1,24 @@
 import { useState } from "react";
 import AppInput from "../components/AppInput";
 import styles from "../styles/general.module.scss";
-import { cleanArrayByKey } from "../constants/functions";
+import { useMatrix } from "../hooks/useMatrix";
 
 const Addition = () => {
-  const [base, setBase] = useState(2);
-  const [finalResult, setResult] = useState<never[][]>();
+  const { base, setBase, values, updateValue, loadExample, getMatrix } = useMatrix(2);
+  const [finalResult, setResult] = useState<number[][]>();
 
   const getFormData = () => {
     setResult(undefined);
 
-    // Obtener elementos visuales
-    const inputs = document.querySelectorAll("input");
-
-    // Limpieza del Arreglo A
-    const orderedArrayA = cleanArrayByKey("a-", base, inputs);
-
-    // Limpieza del Arreglo B
-    const orderedArrayB = cleanArrayByKey("b-", base, inputs);
+    // Obtener matrices del hook
+    const orderedArrayA = getMatrix("a", base, base);
+    const orderedArrayB = getMatrix("b", base, base);
 
     // Calculando resultado
-    const resultArray = Array.from({ length: base }).map((_) => []);
-    orderedArrayA.forEach((i: any, aidx: number) => {
-      i.forEach((num: any, bidx: number) => {
-        resultArray[aidx][bidx] = (num + orderedArrayB[aidx][bidx]) as never;
+    const resultArray: number[][] = Array.from({ length: base }).map(() => []);
+    orderedArrayA.forEach((i, aidx) => {
+      i.forEach((num, bidx) => {
+        resultArray[aidx][bidx] = num + orderedArrayB[aidx][bidx];
       });
     });
 
@@ -38,7 +33,12 @@ const Addition = () => {
         <button className={styles.mr} onClick={() => setBase(2)}>
           Base 2
         </button>
-        <button onClick={() => setBase(3)}>Base 3</button>
+        <button className={styles.mr} onClick={() => setBase(3)}>
+          Base 3
+        </button>
+        <button onClick={() => loadExample("add", base)}>
+          Cargar Ejemplo
+        </button>
       </div>
 
       <div className={styles.arrayContainer}>
@@ -49,7 +49,11 @@ const Addition = () => {
                 {Array.from({ length: base }).map(
                   (_: any, indexTwo: number) => (
                     <td key={`a-${indexOne}-${indexTwo}`}>
-                      <AppInput id={`a-${indexOne}-${indexTwo}`} />
+                      <AppInput
+                        id={`a-${indexOne}-${indexTwo}`}
+                        value={values[`a-${indexOne}-${indexTwo}`]}
+                        onChange={(val) => updateValue(`a-${indexOne}-${indexTwo}`, val)}
+                      />
                     </td>
                   ),
                 )}
@@ -67,7 +71,11 @@ const Addition = () => {
                 {Array.from({ length: base }).map(
                   (_: any, indexTwo: number) => (
                     <td key={`b-${indexOne}-${indexTwo}`}>
-                      <AppInput id={`b-${indexOne}-${indexTwo}`} />
+                      <AppInput
+                        id={`b-${indexOne}-${indexTwo}`}
+                        value={values[`b-${indexOne}-${indexTwo}`]}
+                        onChange={(val) => updateValue(`b-${indexOne}-${indexTwo}`, val)}
+                      />
                     </td>
                   ),
                 )}
@@ -86,7 +94,7 @@ const Addition = () => {
           <tbody>
             {finalResult.map((level, index) => (
               <tr key={`arr${index}`}>
-                {level.map((value: any, indexValue: number) => (
+                {level.map((value: number, indexValue: number) => (
                   <td
                     className={styles.squareInput}
                     key={`result-${index}-${indexValue}`}

@@ -1,30 +1,24 @@
 import { useState } from "react";
 import AppInput from "../components/AppInput";
 import styles from "../styles/general.module.scss";
-import { cleanArrayByKey } from "../constants/functions";
+import { useMatrix } from "../hooks/useMatrix";
 
 const Escalar = () => {
-  const [base, setBase] = useState(2);
-  const [finalResult, setResult] = useState<never[][]>();
+  const { base, setBase, values, updateValue, loadExample, getMatrix, getScalar } = useMatrix(2);
+  const [finalResult, setResult] = useState<number[][]>();
 
   const getFormData = () => {
     setResult(undefined);
 
-    // Obtener elementos visuales
-    const inputs = document.querySelectorAll("input");
-
-    // Obtener el valor escalar
-    const escalar = Array.from(inputs).find((el) => el.id.includes("escalar"));
-    if (escalar === undefined) return;
-
-    // Limpieza del Arreglo B
-    const orderedArrayB = cleanArrayByKey("b-", base, inputs);
+    // Obtener escalar y matriz
+    const k = getScalar();
+    const orderedArrayB = getMatrix("b", base, base);
 
     // Calculando resultado
-    const resultArray = Array.from({ length: base }).map((_) => []);
-    orderedArrayB.forEach((i: any, aidx: number) => {
-      i.forEach((num: any, bidx: number) => {
-        resultArray[aidx][bidx] = (num * parseInt(escalar.value)) as never;
+    const resultArray: number[][] = Array.from({ length: base }).map(() => []);
+    orderedArrayB.forEach((i, aidx) => {
+      i.forEach((num, bidx) => {
+        resultArray[aidx][bidx] = num * k;
       });
     });
 
@@ -41,10 +35,18 @@ const Escalar = () => {
         <button className={styles.mr} onClick={() => setBase(3)}>
           Base 3
         </button>
+        <button onClick={() => loadExample("esc", base)}>
+          Cargar Ejemplo
+        </button>
       </div>
 
       <div className={styles.arrayContainer}>
-        <AppInput id={`escalar`} />
+        <AppInput
+          id="escalar"
+          value={values["scalar"]}
+          onChange={(val) => updateValue("scalar", val)}
+          placeholder="k"
+        />
 
         <div className={styles.operator}>*</div>
 
@@ -55,7 +57,11 @@ const Escalar = () => {
                 {Array.from({ length: base }).map(
                   (_: any, indexTwo: number) => (
                     <td key={`b-${indexOne}-${indexTwo}`}>
-                      <AppInput id={`b-${indexOne}-${indexTwo}`} />
+                      <AppInput
+                        id={`b-${indexOne}-${indexTwo}`}
+                        value={values[`b-${indexOne}-${indexTwo}`]}
+                        onChange={(val) => updateValue(`b-${indexOne}-${indexTwo}`, val)}
+                      />
                     </td>
                   ),
                 )}
@@ -67,7 +73,7 @@ const Escalar = () => {
 
       <div className={styles.mt}>
         <button className={styles.mr} onClick={getFormData}>
-          Escalar
+          Multiplicar
         </button>
       </div>
 
@@ -76,7 +82,7 @@ const Escalar = () => {
           <tbody>
             {finalResult.map((level, index) => (
               <tr key={`arr${index}`}>
-                {level.map((value: any, indexValue: number) => (
+                {level.map((value: number, indexValue: number) => (
                   <td
                     className={styles.squareInput}
                     key={`result-${index}-${indexValue}`}
