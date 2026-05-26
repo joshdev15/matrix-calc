@@ -1,28 +1,23 @@
 import { useState } from "react";
 import AppInput from "../components/AppInput";
 import styles from "../styles/general.module.scss";
-import { cleanArrayByKey, getDeterminant } from "../constants/functions";
+import { getDeterminant } from "../constants/functions";
+import { useMatrix } from "../hooks/useMatrix";
 import { IResult3x3 } from "../constants/interfaces";
 
-/** CramerCube function is used to calculate two matrix 3x3
- * with a Cramer method
- */
 const CramerCube = () => {
-  const [base] = useState(3);
-  const [finalResult, setResult] = useState<never[][]>();
+  const { base, values, updateValue, loadExample, getMatrix } = useMatrix(3);
+  const [finalResult, setResult] = useState<any[][]>();
+  const [error, setError] = useState<string | null>(null);
   const placeholderArray = ["x", "y", "z"];
 
   const getFormData = () => {
     setResult(undefined);
+    setError(null);
 
-    // Obtener elementos visuales
-    const inputs = document.querySelectorAll("input");
-
-    // Limpieza del Arreglo A
-    const orderedA = cleanArrayByKey("a-", base, inputs);
-
-    // Limpieza del Arreglo B
-    const orderedB = cleanArrayByKey("b-", base, inputs);
+    // Obtener matrices del hook
+    const orderedA = getMatrix("a", base, base);
+    const orderedB = getMatrix("b", base, 1);
 
     // Creamos copias para el resultado
     const copyForX = orderedA.map((el) => el.map((innerEl) => innerEl));
@@ -30,35 +25,45 @@ const CramerCube = () => {
     const copyForZ = orderedA.map((el) => el.map((innerEl) => innerEl));
 
     // Obtenemos la determinante del Sistema
-    const systemDet = getDeterminant(Array.from([...orderedA]), base);
+    const systemDet = getDeterminant(orderedA, base);
+    const systemDetVal = systemDet[0][0];
 
-    const findXArray: any = Array.from(copyForX);
-    for (let i = 0; i < findXArray.length; i++) {
-      findXArray[i].splice(0, 1, orderedB[i][0]);
+    // Validación de determinante cero
+    if (systemDetVal === 0) {
+      setError("El determinante del sistema (∆) es 0. El sistema no tiene una solución única por la regla de Cramer.");
+      return;
     }
+
+    const findXArray = copyForX.map((row, idx) => {
+      const newRow = [...row];
+      newRow.splice(0, 1, orderedB[idx][0]);
+      return newRow;
+    });
 
     // Obtenemos la determinante de "x"
     const xDet = getDeterminant(findXArray, base);
 
-    const findYArray: any = Array.from(copyForY);
-    for (let i = 0; i < findYArray.length; i++) {
-      findYArray[i].splice(1, 1, orderedB[i][0]);
-    }
+    const findYArray = copyForY.map((row, idx) => {
+      const newRow = [...row];
+      newRow.splice(1, 1, orderedB[idx][0]);
+      return newRow;
+    });
 
     // Obtenemos la determinante de "y"
     const yDet = getDeterminant(findYArray, base);
 
-    const findZArray: any = Array.from(copyForZ);
-    for (let i = 0; i < findYArray.length; i++) {
-      findZArray[i].splice(2, 1, orderedB[i][0]);
-    }
+    const findZArray = copyForZ.map((row, idx) => {
+      const newRow = [...row];
+      newRow.splice(2, 1, orderedB[idx][0]);
+      return newRow;
+    });
 
     // Obtenemos la determinante de "z"
     const zDet = getDeterminant(findZArray, base);
 
     // Definimos los valores finales basados en la interfaz inicial IResult
     const finalValues: IResult3x3 = {
-      system: systemDet[0][0],
+      system: systemDetVal,
       x: xDet[0][0],
       y: yDet[0][0],
       z: zDet[0][0],
@@ -68,12 +73,22 @@ const CramerCube = () => {
     setResult([
       ["∆", "∆x", "∆y", "∆z"],
       [finalValues.system, finalValues.x, finalValues.y, finalValues.z],
-    ] as never);
+    ]);
+  };
+
+  const formatValue = (val: number) => {
+    const formatted = parseFloat(val.toFixed(4));
+    return isNaN(formatted) ? 0 : formatted;
   };
 
   return (
     <div className={styles.wrapper} id="wrapper">
       <h1 className={styles.mb}>Cramer 3x3</h1>
+      <div className={styles.mb}>
+        <button onClick={() => loadExample("cramer_cube")}>
+          Cargar Ejemplo
+        </button>
+      </div>
 
       <div className={styles.arrayContainer}>
         <table>
@@ -84,16 +99,13 @@ const CramerCube = () => {
                   (_: any, indexTwo: number) => (
                     <td
                       key={`a-${indexOne}-${indexTwo}`}
-                      className={
-                        (base === 2 && indexTwo === 1) ||
-                        (base === 3 && indexTwo === 2)
-                          ? styles.lastSpace
-                          : ""
-                      }
+                      className={indexTwo === base - 1 ? styles.lastSpace : ""}
                     >
                       <AppInput
                         id={`a-${indexOne}-${indexTwo}`}
+                        value={values[`a-${indexOne}-${indexTwo}`]}
                         placeholder={placeholderArray[indexTwo]}
+                        onChange={(val) => updateValue(`a-${indexOne}-${indexTwo}`, val)}
                       />
                     </td>
                   ),
@@ -106,7 +118,9 @@ const CramerCube = () => {
                   >
                     <AppInput
                       id={`b-${indexOne}-${indexTwo}`}
+                      value={values[`b-${indexOne}-${indexTwo}`]}
                       placeholder="i"
+                      onChange={(val) => updateValue(`b-${indexOne}-${indexTwo}`, val)}
                     />
                   </td>
                 ))}
@@ -120,6 +134,12 @@ const CramerCube = () => {
         <button onClick={getFormData}>Determinar</button>
       </div>
 
+      {error && (
+        <div className={styles.errorMsg}>
+          {error}
+        </div>
+      )}
+
       {finalResult !== undefined && (
         <>
           <table className={styles.mt}>
@@ -131,7 +151,7 @@ const CramerCube = () => {
                       className={styles.squareInput}
                       key={`result-${index}-${indexValue}`}
                     >
-                      {value}
+                      {typeof value === "number" ? formatValue(value) : value}
                     </td>
                   ))}
                 </tr>
@@ -147,10 +167,10 @@ const CramerCube = () => {
               const finalValue = currentDeterminant / systemDeterminant;
 
               return (
-                <div className={styles.resultBigSquare}>
+                <div className={styles.resultBigSquare} key={`sol-${el}`}>
                   <p>{`Valor de ${el}`}</p>
                   <p>{`${el} = ∆${el} / ∆`}</p>
-                  <p>{`${el} = ${currentDeterminant} / ${systemDeterminant} = ${finalValue}`}</p>
+                  <p>{`${el} = ${formatValue(currentDeterminant)} / ${formatValue(systemDeterminant)} = ${formatValue(finalValue)}`}</p>
                 </div>
               );
             })}

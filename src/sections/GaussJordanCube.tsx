@@ -1,263 +1,95 @@
 import { useState } from "react";
 import AppInput from "../components/AppInput";
 import styles from "../styles/general.module.scss";
-import {
-  cleanArrayByKey,
-  multiplyByBase,
-  reverseSignAndMultiplyByBase,
-  getHandler,
-  getLocalBase,
-  clogStyle,
-} from "../constants/functions";
+import { useMatrix } from "../hooks/useMatrix";
 
-/** GaussJordanCube function is used to calculate two matrix 3x3 with a Gauss Jordan method  */
+/** GaussJordanCube component is used to solve a system of 3 linear equations using Gauss-Jordan elimination */
 const GaussJordanCube = () => {
-  const [base] = useState(3);
-  const [finalResult, setResult] = useState<never[][]>();
+  const { base, values, updateValue, loadExample, getMatrix } = useMatrix(3);
+  const [finalResult, setResult] = useState<number[][]>();
+  const [error, setError] = useState<string | null>(null);
   const placeholderArray = ["x", "y", "z"];
 
   const getFormData = () => {
     setResult(undefined);
+    setError(null);
 
-    // Obtener elementos visuales
-    const inputs = document.querySelectorAll("input");
+    // Obtener matrices del hook
+    const orderedA = getMatrix("a", base, base);
+    const orderedB = getMatrix("b", base, 1);
 
-    // Limpieza del Arreglo A
-    const orderedA = cleanArrayByKey("a-", base, inputs);
+    // Construir la matriz aumentada 3x4: [A | B]
+    const M: number[][] = [];
+    for (let i = 0; i < base; i++) {
+      const rowA = orderedA[i] || [];
+      const rowB = orderedB[i] || [];
+      const valB = typeof rowB[0] === "number" ? rowB[0] : 0;
+      
+      M.push([
+        rowA[0] !== undefined ? rowA[0] : 0,
+        rowA[1] !== undefined ? rowA[1] : 0,
+        rowA[2] !== undefined ? rowA[2] : 0,
+        valB,
+      ]);
+    }
 
-    // Limpieza del Arreglo B
-    let orderedB = cleanArrayByKey("b-", base, inputs);
+    // Algoritmo de Gauss-Jordan con Pivoteo Parcial
+    for (let i = 0; i < base; i++) {
+      // 1. Pivoteo parcial
+      let maxRow = i;
+      for (let k = i + 1; k < base; k++) {
+        if (Math.abs(M[k][i]) > Math.abs(M[maxRow][i])) {
+          maxRow = k;
+        }
+      }
 
-    // Creamos copias para el resultado
-    const copyOrderedA: any[] = orderedA.map((e: any) => e.map((i: any) => i));
-    const copyOrderedB: any[] = orderedB.map((e: any) => e.map((i: any) => i));
+      // Si el elemento pivote es cero o extremadamente cercano a cero, la matriz es singular (no hay solución única)
+      if (Math.abs(M[maxRow][i]) < 1e-9) {
+        setError("El sistema no tiene una solución única (la matriz es singular o tiene soluciones infinitas).");
+        return;
+      }
 
-    /** Primer elemento de la fila 2 a cero (0)
-     * | * | * | * |
-     * | 0 | * | * |
-     * | * | * | * |
-     */
-    console.log("%cStep 1", clogStyle);
-    let firstRow = orderedA[0];
-    let secondRow = orderedA[1];
-    let thirdRow = orderedA[2];
-    let localBase: any = getLocalBase(secondRow[0], firstRow[0]);
-    let localBaseIsObject = typeof localBase !== "number";
-    let operation = localBaseIsObject
-      ? getHandler(localBase.positive)
-      : getHandler(localBase);
+      // Intercambiar la fila actual i con la fila del pivote maxRow
+      if (maxRow !== i) {
+        const temp = M[i];
+        M[i] = M[maxRow];
+        M[maxRow] = temp;
+      }
 
-    copyOrderedA[1] = operation(
-      multiplyByBase(secondRow, localBaseIsObject ? localBase.positive : 1),
-      reverseSignAndMultiplyByBase(
-        firstRow,
-        localBaseIsObject ? localBase.negative : localBase,
-      ),
-    );
-    copyOrderedB[1] = operation(
-      multiplyByBase(
-        copyOrderedB[1],
-        localBaseIsObject ? localBase.positive : 1,
-      ),
-      reverseSignAndMultiplyByBase(
-        copyOrderedB[0],
-        localBaseIsObject ? localBase.negative : localBase,
-      ),
-    );
+      // 2. Normalizar la fila del pivote: hacer que el elemento de la diagonal M[i][i] sea 1
+      const pivotVal = M[i][i];
+      for (let j = i; j <= base; j++) {
+        M[i][j] = M[i][j] / pivotVal;
+      }
 
-    /** Primer elemento de la fila 3 a cero (0)
-     * | * | * | * |
-     * | * | * | * |
-     * | 0 | * | * |
-     */
-    console.log("%cStep 2", clogStyle);
-    firstRow = orderedA[0];
-    thirdRow = orderedA[2];
-    localBase = getLocalBase(thirdRow[0], firstRow[0]);
-    localBaseIsObject = typeof localBase !== "number";
-    operation = localBaseIsObject
-      ? getHandler(localBase.negative)
-      : getHandler(localBase);
+      // 3. Eliminación: hacer cero los demás elementos en la columna i para todas las otras filas
+      for (let k = 0; k < base; k++) {
+        if (k !== i) {
+          const factor = M[k][i];
+          for (let j = i; j <= base; j++) {
+            M[k][j] = M[k][j] - factor * M[i][j];
+          }
+        }
+      }
+    }
 
-    copyOrderedA[2] = operation(
-      multiplyByBase(thirdRow, localBaseIsObject ? localBase.positive : 1),
-      reverseSignAndMultiplyByBase(
-        firstRow,
-        localBaseIsObject ? localBase.positive : localBase,
-      ),
-    );
-    copyOrderedB[2] = operation(
-      multiplyByBase(
-        copyOrderedB[2],
-        localBaseIsObject ? localBase.positive : 1,
-      ),
-      reverseSignAndMultiplyByBase(
-        copyOrderedB[0],
-        localBaseIsObject ? localBase.positive : localBase,
-      ),
-    );
+    // Guardar el resultado
+    setResult(M);
+  };
 
-    /** Segundo elemento de la fila 3 a cero (0)
-     * | * | * | * |
-     * | * | * | * |
-     * | * | 0 | * |
-     */
-    console.log("%cStep 3", clogStyle);
-    thirdRow = copyOrderedA[2];
-    secondRow = copyOrderedA[1];
-    localBase = getLocalBase(thirdRow[1], secondRow[1]);
-    localBaseIsObject = typeof localBase !== "number";
-    operation = localBaseIsObject
-      ? getHandler(localBase.negative)
-      : getHandler(localBase);
-
-    copyOrderedA[2] = operation(
-      multiplyByBase(thirdRow, localBaseIsObject ? localBase.positive : 1),
-      reverseSignAndMultiplyByBase(
-        secondRow,
-        localBaseIsObject ? localBase.positive : localBase,
-      ),
-    );
-
-    copyOrderedB[2] = operation(
-      copyOrderedB[2],
-      reverseSignAndMultiplyByBase(
-        copyOrderedB[1],
-        localBaseIsObject ? localBase.positive : localBase,
-      ),
-    );
-
-    /** Tercer elemento de la fila 1 a cero (0)
-     * | * | * | 0 |
-     * | * | * | * |
-     * | * | * | * |
-     */
-    console.log("%cStep 4", clogStyle);
-    firstRow = copyOrderedA[0];
-    thirdRow = copyOrderedA[2];
-
-    localBase = getLocalBase(firstRow[2], thirdRow[2]);
-    localBaseIsObject = typeof localBase !== "number";
-    operation = localBaseIsObject
-      ? getHandler(localBase.positive)
-      : getHandler(localBase);
-
-    copyOrderedA[0] = operation(
-      multiplyByBase(thirdRow, localBaseIsObject ? localBase.negative : 1),
-      reverseSignAndMultiplyByBase(
-        firstRow,
-        localBaseIsObject ? localBase.positive : localBase,
-      ),
-    );
-
-    copyOrderedB[0] = operation(
-      multiplyByBase(
-        copyOrderedB[2],
-        localBaseIsObject ? localBase.negative : 1,
-      ),
-      reverseSignAndMultiplyByBase(
-        copyOrderedB[0],
-        localBaseIsObject ? localBase.positive : localBase,
-      ),
-    );
-
-    /** Tercer elemento de la fila 2 a cero (0)
-     * | * | * | * |
-     * | * | * | 0 |
-     * | * | * | * |
-     */
-    console.log("%cStep 5", clogStyle);
-    secondRow = copyOrderedA[1];
-    thirdRow = copyOrderedA[2];
-    localBase = getLocalBase(secondRow[2], thirdRow[2]);
-    localBaseIsObject = typeof localBase !== "number";
-
-    operation = localBaseIsObject
-      ? getHandler(localBase.negative)
-      : getHandler(localBase);
-
-    copyOrderedA[1] = operation(
-      multiplyByBase(secondRow, localBaseIsObject ? localBase.positive : 1),
-      reverseSignAndMultiplyByBase(
-        thirdRow,
-        localBaseIsObject ? localBase.negative : localBase,
-      ),
-    );
-
-    copyOrderedB[1] = operation(
-      reverseSignAndMultiplyByBase(
-        copyOrderedB[2],
-        localBaseIsObject ? localBase.negative : localBase,
-      ),
-      multiplyByBase(
-        copyOrderedB[1],
-        localBaseIsObject ? localBase.positive : 1,
-      ),
-    );
-
-    /** Segundo elemento de la fila 1 a cero (0)
-     * | * | 0 | * |
-     * | * | * | * |
-     * | * | * | * |
-     */
-    console.log("%cStep 6", clogStyle);
-    firstRow = copyOrderedA[0];
-    secondRow = copyOrderedA[1];
-    localBase = getLocalBase(secondRow[1], firstRow[1]);
-    localBaseIsObject = typeof localBase !== "number";
-    operation = localBaseIsObject
-      ? getHandler(localBase.negative)
-      : getHandler(localBase);
-
-    copyOrderedA[0] = operation(
-      multiplyByBase(secondRow, localBaseIsObject ? localBase.positive : 1),
-      reverseSignAndMultiplyByBase(
-        firstRow,
-        localBaseIsObject ? localBase.negative : localBase,
-      ),
-    );
-
-    copyOrderedB[0] = operation(
-      multiplyByBase(
-        copyOrderedB[1],
-        localBaseIsObject ? localBase.positive : 1,
-      ),
-      reverseSignAndMultiplyByBase(
-        copyOrderedB[0],
-        localBaseIsObject ? localBase.negative : localBase,
-      ),
-    );
-
-    /** Matriz de identidad a 1 */
-    firstRow = copyOrderedA[0];
-    secondRow = copyOrderedA[1];
-    thirdRow = copyOrderedA[2];
-
-    const firstRowResult = firstRow.map((value) => value / firstRow[0]);
-    const secondRowResult = secondRow.map((value) => value / secondRow[1]);
-    const thirdRowResult = thirdRow.map((value) => value / thirdRow[2]);
-
-    const indFirst = copyOrderedB[0] / firstRow[0];
-    const indSecond = copyOrderedB[1] / secondRow[1];
-    const indThird = copyOrderedB[2] / thirdRow[2];
-
-    console.log([
-      JSON.stringify(firstRowResult).replace(/\[|\]/g, ""),
-      JSON.stringify(secondRowResult).replace(/\[|\]/g, ""),
-      JSON.stringify(thirdRowResult).replace(/\[|\]/g, ""),
-    ]);
-    console.log([indFirst, indSecond, indThird]);
-
-    firstRowResult.push(indFirst);
-    secondRowResult.push(indSecond);
-    thirdRowResult.push(indThird);
-
-    setResult([firstRowResult, secondRowResult, thirdRowResult] as never[]);
+  const formatValue = (value: number) => {
+    const formatted = parseFloat(value.toFixed(4));
+    return isNaN(formatted) ? 0 : formatted;
   };
 
   return (
     <div className={styles.wrapper} id="wrapper">
       <h1 className={styles.mb}>Gauss Jordan 3x3</h1>
+      <div className={styles.mb}>
+        <button onClick={() => loadExample("gauss_jordan_cube")}>
+          Cargar Ejemplo
+        </button>
+      </div>
 
       <div className={styles.arrayContainer}>
         <table>
@@ -268,16 +100,13 @@ const GaussJordanCube = () => {
                   (_: any, indexTwo: number) => (
                     <td
                       key={`a-${indexOne}-${indexTwo}`}
-                      className={
-                        (base === 2 && indexTwo === 1) ||
-                        (base === 3 && indexTwo === 2)
-                          ? styles.lastSpace
-                          : ""
-                      }
+                      className={indexTwo === base - 1 ? styles.lastSpace : ""}
                     >
                       <AppInput
                         id={`a-${indexOne}-${indexTwo}`}
+                        value={values[`a-${indexOne}-${indexTwo}`]}
                         placeholder={placeholderArray[indexTwo]}
+                        onChange={(val) => updateValue(`a-${indexOne}-${indexTwo}`, val)}
                       />
                     </td>
                   ),
@@ -290,7 +119,9 @@ const GaussJordanCube = () => {
                   >
                     <AppInput
                       id={`b-${indexOne}-${indexTwo}`}
+                      value={values[`b-${indexOne}-${indexTwo}`]}
                       placeholder="i"
+                      onChange={(val) => updateValue(`b-${indexOne}-${indexTwo}`, val)}
                     />
                   </td>
                 ))}
@@ -304,18 +135,24 @@ const GaussJordanCube = () => {
         <button onClick={getFormData}>Determinar</button>
       </div>
 
+      {error && (
+        <div className={styles.errorMsg}>
+          {error}
+        </div>
+      )}
+
       {finalResult !== undefined && (
         <>
           <table className={styles.mt}>
             <tbody>
               {finalResult.map((level, index) => (
                 <tr key={`arr${index}`}>
-                  {level.map((value: any, indexValue: number) => (
+                  {level.map((value: number, indexValue: number) => (
                     <td
                       className={styles.squareInput}
                       key={`result-${index}-${indexValue}`}
                     >
-                      {(value as number).toFixed(0)}
+                      {formatValue(value)}
                     </td>
                   ))}
                 </tr>

@@ -24,7 +24,8 @@ export const cleanArrayByKey = (
   array.forEach((item) => {
     const id = item.id.split("-");
     const arrLevel = parseInt(id[1]);
-    orderedArray[arrLevel].push(parseInt(item.value) as never);
+    const parsedVal = parseFloat(item.value);
+    orderedArray[arrLevel].push((isNaN(parsedVal) ? 0 : parsedVal) as never);
   });
 
   return orderedArray;
