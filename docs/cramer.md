@@ -7,6 +7,12 @@ Para poder aplicar la Regla de Cramer:
 1. El número de ecuaciones debe ser igual al número de incógnitas.
 2. **El determinante del sistema ($\Delta$) debe ser distinto de cero ($\Delta \neq 0$)**. Si el determinante es cero, el sistema es incompatible o indeterminado, y no se puede resolver por este método.
 
+> [!NOTE]
+> **¿Qué representa el símbolo Delta ($\Delta$)?**
+> El triángulo $\Delta$ es la letra griega **"Delta"**. En álgebra lineal y sistemas de ecuaciones, se utiliza comúnmente para simbolizar el **Determinante** (un valor numérico único asociado a una matriz cuadrada).
+> - $\Delta$ (Delta general): determinante de la matriz de coeficientes principales (los números que acompañan a las variables).
+> - $\Delta_k$ (Delta específico): determinante de la matriz sustituyendo la columna de la incógnita $x_k$ por la columna de resultados independientes.
+
 ## Principio Teórico
 Para cada incógnita $x_k$, su valor se obtiene dividiendo el determinante de la matriz asociada a esa incógnita ($\Delta_k$) por el determinante del sistema ($\Delta$):
 

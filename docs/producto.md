@@ -9,37 +9,35 @@ Si:
 - $A$ tiene dimensiones $m \times p$.
 - $B$ tiene dimensiones $p \times n$.
 
-Entonces la multiplicación es posible y la matriz resultante $C = A \times B$ tendrá dimensiones $m \times n$.
-
-## Método de Cálculo
-Cada elemento $c_{ij}$ de la matriz resultante se calcula como el producto punto de la fila $i$ de la matriz $A$ y la columna $j$ de la matriz $B$:
-
-$$c_{ij} = \sum_{k=1}^{p} a_{ik} \cdot b_{kj} = a_{i1}b_{1j} + a_{i2}b_{2j} + \dots + a_{ip}b_{pj}$$
+La multiplicación es posible y la matriz resultante $C = A \times B$ tendrá dimensiones $m \times n$.
 
 ---
 
-## Ejemplo Práctico (2x2)
+## Ejemplo Práctico (Matriz Irregular 3x2 por 2x3)
 
 Sean las matrices:
 
-$$A = \begin{pmatrix} 2 & 3 \\ 1 & 0 \end{pmatrix}, \quad B = \begin{pmatrix} 4 & -2 \\ 5 & 1 \end{pmatrix}$$
+$$A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \\ 5 & 6 \end{pmatrix}, \quad B = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix}$$
 
-Dado que $A$ es $2 \times 2$ y $B$ es $2 \times 2$, el número de columnas de $A$ (2) es igual al número de filas de $B$ (2), por lo que el resultado $C$ será también de tamaño $2 \times 2$.
+Dado que la matriz $A$ tiene tamaño $3 \times 2$ (2 columnas) y la matriz $B$ tiene tamaño $2 \times 3$ (2 filas), el requisito de multiplicación se cumple (2 = 2). La matriz resultante $C$ tendrá dimensiones $3 \times 3$.
 
 ### Paso a Paso
 
-1. **Celda (1,1):** Fila 1 de A por Columna 1 de B
-   $$c_{11} = (2 \cdot 4) + (3 \cdot 5) = 8 + 15 = 23$$
+1. **Fila 1 de A por las columnas de B:**
+   - **Celda (1,1):** $(1 \cdot 1) + (2 \cdot 4) = 1 + 8 = 9$
+   - **Celda (1,2):** $(1 \cdot 2) + (2 \cdot 5) = 2 + 10 = 12$
+   - **Celda (1,3):** $(1 \cdot 3) + (2 \cdot 6) = 3 + 12 = 15$
 
-2. **Celda (1,2):** Fila 1 de A por Columna 2 de B
-   $$c_{12} = (2 \cdot -2) + (3 \cdot 1) = -4 + 3 = -1$$
+2. **Fila 2 de A por las columnas de B:**
+   - **Celda (2,1):** $(3 \cdot 1) + (4 \cdot 4) = 3 + 16 = 19$
+   - **Celda (2,2):** $(3 \cdot 2) + (4 \cdot 5) = 6 + 20 = 26$
+   - **Celda (2,3):** $(3 \cdot 3) + (4 \cdot 6) = 9 + 24 = 33$
 
-3. **Celda (2,1):** Fila 2 de A por Columna 1 de B
-   $$c_{21} = (1 \cdot 4) + (0 \cdot 5) = 4 + 0 = 4$$
-
-4. **Celda (2,2):** Fila 2 de A por Columna 2 de B
-   $$c_{22} = (1 \cdot -2) + (0 \cdot 1) = -2 + 0 = -2$$
+3. **Fila 3 de A por las columnas de B:**
+   - **Celda (3,1):** $(5 \cdot 1) + (6 \cdot 4) = 5 + 24 = 29$
+   - **Celda (3,2):** $(5 \cdot 2) + (6 \cdot 5) = 10 + 30 = 40$
+   - **Celda (3,3):** $(5 \cdot 3) + (6 \cdot 6) = 15 + 36 = 51$
 
 ### Resultado
 
-$$C = A \times B = \begin{pmatrix} 23 & -1 \\ 4 & -2 \end{pmatrix}$$
+$$C = A \times B = \begin{pmatrix} 9 & 12 & 15 \\ 19 & 26 & 33 \\ 29 & 40 & 51 \end{pmatrix}$$

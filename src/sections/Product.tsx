@@ -45,12 +45,12 @@ const Product = () => {
     setResult(result);
   };
 
-  const handleLoadExample = (size: number) => {
-    setRowsA(size);
-    setColumsA(size);
-    setRowsB(size);
-    setColumsB(size);
-    loadExample("product", size);
+  const handleLoadExample = () => {
+    setRowsA(3);
+    setColumsA(2);
+    setRowsB(2);
+    setColumsB(3);
+    loadExample("product");
   };
 
   useEffect(() => {
@@ -92,11 +92,8 @@ const Product = () => {
       </div>
 
       <div className={styles.mb}>
-        <button className={styles.mr} onClick={() => handleLoadExample(2)}>
-          Ejemplo 2x2
-        </button>
-        <button onClick={() => handleLoadExample(3)}>
-          Ejemplo 3x3
+        <button onClick={handleLoadExample}>
+          Cargar Ejemplo
         </button>
       </div>
 

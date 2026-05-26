@@ -263,7 +263,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 480px;
+  width: 800px;
   max-width: 90vw;
   height: 100vh;
   background: rgba(17, 20, 32, 0.95);
@@ -321,10 +321,10 @@
 }
 
 .drawerBody {
-  padding: 24px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 28px;
   overflow-y: auto;
   flex-grow: 1;
 }
@@ -332,13 +332,14 @@
 .drawerSection {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.04);
-  padding: 20px;
+  padding: 26px 28px;
   border-radius: var(--radius-md);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
 
   h3 {
-    font-size: 1.05rem;
-    margin-bottom: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 18px;
     font-family: var(--font-display);
     color: var(--accent-color);
     text-transform: uppercase;
@@ -348,15 +349,55 @@
     gap: 8px;
   }
 
-  p, li {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
+  h4 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-top: 20px;
+    margin-bottom: 8px;
   }
 
-  ul {
+  p {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin: 0 0 14px 0;
+  }
+
+  li {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul, ol {
     padding-left: 20px;
-    margin: 8px 0;
+    margin: 8px 0 16px 0;
+  }
+
+  [style*="font-family: monospace"],
+  [style*="font-family:monospace"] {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    padding: 8px 14px !important;
+    border-radius: var(--radius-sm) !important;
+    font-size: 0.92rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    letter-spacing: 0.02em;
+    color: #e2e8f0 !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 6px 0 14px 0;
+  }
+
+  span[style*="font-family: monospace"],
+  span[style*="font-family:monospace"] {
+    display: inline-block;
   }
 }
 
